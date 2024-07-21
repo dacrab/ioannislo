@@ -6,6 +6,7 @@
   /* Colors */
   --hue-color: 224;
   --first-color: hsl(var(--hue-color), 89%, 60%);
+  --first-color-lighter: hsl(var(--hue-color), 89%, 70%);
   --second-color: hsl(var(--hue-color), 56%, 12%);
   --text-color: var(--second-color);
   --nav-text-color: var(--second-color);
@@ -110,7 +111,7 @@ img {
   display: block;
 }
 
-/*===== CLASS CSS ===== */
+/*===== REUSABLE CSS CLASSES =====*/
 .section-title {
   position: relative;
   font-size: var(--h2-font-size);
@@ -118,6 +119,7 @@ img {
   margin: var(--mb-2) 0 var(--mb-4);
   text-align: center;
 }
+
 .section-title::after {
   content: "";
   position: absolute;
@@ -130,20 +132,64 @@ img {
   background-color: var(--first-color);
 }
 
-ul {
-  list-style: none;
+.button {
+  display: inline-block;
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  padding: 0.75rem 2.5rem;
+  font-weight: var(--font-semi);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-a {
-  text-decoration: none;
-  color: var(--text-color);
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.6s;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+.button:hover::before {
+  left: 100%;
 }
+
+.button:hover {
+  background-color: var(--first-color-lighter);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Apply hover effect to all buttons and icons */
+.button,
+.home__social-icon,
+.footer__icon,
+.contact__button,
+.skill-item,
+.skill-item i {
+  transition: all 0.3s ease;
+}
+
+.button:hover,
+.home__social-icon:hover,
+.footer__icon:hover,
+.contact__button:hover,
+.skill-item:hover {
+  color: var(--first-color);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Custom hover colors for skill items */
+.skill-item:hover [class^="fa-"] { color: var(--first-color); }
+
+/* Custom hover colors for social media icons */
+.home__social-icon:hover [class^="fa-"],
+.footer__icon:hover [class^="fa-"] { color: var(--first-color); }
 
 /*===== LAYOUT =====*/
 .bd-grid {
@@ -175,8 +221,18 @@ section {
   font-weight: var(--font-semi);
 }
 
+.nav__logo {
+  font-family: var(--logo-font);
+  color: var(--nav-text-color);
+}
+
+.nav__list {
+  display: flex;
+  padding-top: 0;
+}
+
 .nav__item {
-  margin-bottom: var(--mb-4);
+  margin-left: var(--mb-6);
 }
 
 .nav__link {
@@ -202,11 +258,6 @@ section {
 
 .nav__link:hover::after {
   width: 100%;
-}
-
-.nav__logo {
-  font-family: 'Playwrite MX', serif;
-  color: var(--nav-text-color);
 }
 
 .nav__toggle {
@@ -258,10 +309,6 @@ section {
   background-color: var(--first-color);
 }
 
-.show {
-  right: 0;
-}
-
 .dark-mode-toggle {
   display: flex;
   align-items: center;
@@ -284,15 +331,17 @@ section {
     transition: 0.5s;
   }
 
+  .nav__menu.show {
+    right: 0;
+  }
+
   .nav__menu .nav__link,
   .nav__menu .dark-mode-toggle {
     color: #ffffff;
   }
 
-  .nav__menu .dark-mode-toggle {
-    justify-content: flex-start;
-    margin-left: 0;
-    padding-left: 0.5rem;
+  .nav__item {
+    margin-bottom: var(--mb-4);
   }
 
   .nav__menu .dark-mode-toggle i {
@@ -330,12 +379,6 @@ section {
   margin-bottom: var(--mb-2);
   font-size: 1.5rem;
   color: var(--text-color);
-  transition: color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.home__social-icon:hover {
-  color: var(--first-color);
-  transform: translateY(-5px);
 }
 
 .home__img {
@@ -348,50 +391,8 @@ section {
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-/*===== BUTTONS =====*/
-.button {
-  display: inline-block;
-  background-color: var(--button-bg);
-  color: var(--button-text-color);
-  padding: 0.75rem 2.5rem;
-  font-weight: var(--font-semi);
-  border-radius: 0.5rem;
-  transition: 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: all 0.6s;
-}
-
-.button:hover::before {
-  left: 100%;
-}
-
-.button:hover {
-  box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.15);
-  transform: translateY(-3px);
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
 }
 
 /*===== ABOUT =====*/
@@ -419,12 +420,10 @@ section {
 }
 
 .skills__subtitle {
-  text-align: center;
   margin-bottom: 1rem;
 }
 
 .skills__text {
-  text-align: center;
   margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
@@ -457,121 +456,6 @@ section {
   text-align: center;
   font-size: 0.8rem;
   color: var(--text-color);
-}
-
-.skills__icons i:hover {
-  transform: scale(1.2); /* Zoom effect */
-  filter: brightness(1.2); /* Brightness increase */
-}
-
-/* Custom hover colors */
-.skill-item:hover .fa-html5 { color: #E34F26; }
-.skill-item:hover .fa-css3-alt { color: #1572B6; }
-.skill-item:hover .fa-js-square { color: #F7DF1E; }
-.skill-item:hover .fa-java { color: #007396; }
-.skill-item:hover .fa-code.c-lang { color: #A8B9CC; }
-.skill-item:hover .fa-cuttlefish { color: #00599C; }
-.skill-item:hover .fa-php { color: #777BB4; }
-.skill-item:hover .fa-unity { color: #000000; }
-.skill-item:hover .fa-gamepad { color: #0E1128; } /* Unreal Engine */
-.skill-item:hover .fa-adobe { color: #FF0000; }
-.skill-item:hover .fa-video { color: #9999FF; } /* Adobe Premiere */
-.skill-item:hover .fa-wordpress { color: #21759B; }
-.skill-item:hover .fa-cube { color: #00A5E3; } /* 3Ds Max */
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.8; }
-  100% { opacity: 1; }
-}
-
-/* General icon styling */
-.home__social-icon,
-.footer__icon,
-.skill-item i {
-  transition: color 0.2s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.home__social-icon:hover,
-.footer__icon:hover,
-.skill-item:hover i {
-    transform: translateY(-5px);
-}
-
-/* Custom hover colors for all icons */
-/* Skills */
-.skill-item:hover .fa-html5 { color: #E34F26; }
-.skill-item:hover .fa-css3-alt { color: #1572B6; }
-.skill-item:hover .fa-js-square { color: #F7DF1E; }
-.skill-item:hover .fa-java { color: #007396; }
-.skill-item:hover .fa-code.c-lang { color: #A8B9CC; }
-.skill-item:hover .fa-cuttlefish { color: #00599C; }
-.skill-item:hover .fa-php { color: #777BB4; }
-.skill-item:hover .fa-unity { color: #000000; }
-.skill-item:hover .fa-gamepad { color: #0E1128; } /* Unreal Engine */
-.skill-item:hover .fa-adobe { color: #FF0000; }
-.skill-item:hover .fa-video { color: #9999FF; } /* Adobe Premiere */
-.skill-item:hover .fa-wordpress { color: #21759B; }
-.skill-item:hover .fa-cube { color: #00A5E3; } /* 3Ds Max */
-
-/* Social media and contact icons */
-.home__social-icon:hover .fa-facebook,
-.footer__icon:hover .fa-facebook { color: #1877F2; }
-.home__social-icon:hover .fa-instagram,
-.footer__icon:hover .fa-instagram { color: #E4405F; }
-.home__social-icon:hover .fa-envelope,
-.footer__icon:hover .fa-envelope { color: #D44638; }
-
-/* Additional social media icons if needed */
-.home__social-icon:hover .fa-twitter,
-.footer__icon:hover .fa-twitter { color: #1DA1F2; }
-.home__social-icon:hover .fa-linkedin,
-.footer__icon:hover .fa-linkedin { color: #0A66C2; }
-.home__social-icon:hover .fa-github,
-.footer__icon:hover .fa-github { color: #181717; }
-
-/* Dark mode toggle icons */
-#dark-mode-toggle:hover .fa-moon { color: #FFA500; }
-#dark-mode-toggle:hover .fa-sun { color: #FFD700; }
-
-/* Navigation toggle icon */
-.nav__toggle:hover .fa-bars,
-.nav__toggle:hover .fa-times { color: var(--first-color); }
-
-/*===== WORK =====*/
-.work__container {
-  row-gap: 2rem;
-}
-
-.work__img {
-  box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  position: relative;
-}
-
-.work__img img {
-  transition: transform 0.5s ease;
-}
-
-.work__img::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.work__img:hover img {
-  transform: scale(1.1);
-}
-
-.work__img:hover::before {
-  opacity: 1;
 }
 
 /*===== CONTACT =====*/
@@ -613,7 +497,7 @@ section {
   padding: 0.75rem 2.5rem;
   font-weight: var(--font-semi);
   border-radius: 0.5rem;
-  transition: 0.3s;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -625,12 +509,7 @@ section {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: all 0.6s;
 }
 
@@ -639,8 +518,9 @@ section {
 }
 
 .contact__button:hover {
-  box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.15);
-  transform: translateY(-3px);
+  background-color: var(--first-color-lighter);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px) scale(1.05);
 }
 
 .contact__button i {
@@ -670,7 +550,7 @@ section {
   font-size: 1.5rem;
   color: var(--footer-text-color);
   margin: 0 var(--mb-2);
-  transition: color 0.2s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: color 0.2s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .footer__icon:hover {
@@ -801,7 +681,7 @@ section {
 }
 
 .skill-item i {
-    font-size: 2rem;
+    font-size: 2.5rem;
 }
 
 .skill-description {
@@ -844,4 +724,100 @@ section {
 .sr .home__img, .sr .about__subtitle, .sr .about__text, .sr .skills__img,
 .sr .home__social-icon, .sr .skills__data, .sr .work__img, .sr .contact__input, .sr .skills__icons{
   visibility: hidden;
+}
+
+/* Apply hover effect to all buttons and icons */
+.button,
+.home__social-icon,
+.footer__icon,
+.contact__button,
+.skill-item,
+.skill-item i {
+  transition: color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover,
+.home__social-icon:hover,
+.footer__icon:hover,
+.contact__button:hover,
+.skill-item:hover {
+  color: var(--first-color);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Custom hover colors for skill items */
+.skill-item:hover .fa-html5 { color: #E34F26; }
+.skill-item:hover .fa-css3-alt { color: #1572B6; }
+.skill-item:hover .fa-js-square { color: #F7DF1E; }
+.skill-item:hover .fa-java { color: #007396; }
+.skill-item:hover .fa-code.c-lang { color: #A8B9CC; }
+.skill-item:hover .fa-cuttlefish { color: #00599C; }
+.skill-item:hover .fa-php { color: #777BB4; }
+.skill-item:hover .fa-unity { color: #000000; }
+.skill-item:hover .fa-gamepad { color: #0E1128; }
+.skill-item:hover .fa-adobe { color: #FF0000; }
+.skill-item:hover .fa-video { color: #9999FF; }
+.skill-item:hover .fa-wordpress { color: #21759B; }
+.skill-item:hover .fa-cube { color: #00A5E3; }
+
+/* Custom hover colors for social media icons */
+.home__social-icon:hover .fa-facebook,
+.footer__icon:hover .fa-facebook { color: #1877F2; }
+.home__social-icon:hover .fa-instagram,
+.footer__icon:hover .fa-instagram { color: #E4405F; }
+.home__social-icon:hover .fa-envelope,
+.footer__icon:hover .fa-envelope { color: #D44638; }
+
+/* Smooth transition for buttons */
+.button {
+  transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--first-color-lighter);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Additional hover effects for social icons and contact buttons */
+.home__social-icon:hover,
+.footer__icon:hover,
+.contact__button:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 767px) {
+  .nav__menu {
+    position: fixed;
+    top: var(--header-height);
+    right: -100%;
+    width: 80%;
+    height: 100%;
+    padding: 2rem;
+    background-color: var(--second-color);
+    transition: 0.5s;
+  }
+
+  .nav__menu.show {
+    right: 0;
+  }
+
+  .nav__menu.show .nav__list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav__menu.show .nav__item {
+    margin-left: 0;
+    margin-bottom: var(--mb-4);
+  }
+
+  .nav__menu.show .nav__link,
+  .nav__menu.show .dark-mode-toggle {
+    color: #ffffff;
+  }
+
+  .nav__menu.show .dark-mode-toggle i {
+    color: #ffffff;
+  }
 }

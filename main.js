@@ -1,8 +1,6 @@
 /*===== DOM ELEMENTS =====*/
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
-const menuIcon = document.querySelector('.menu-icon');
-const closeIcon = document.querySelector('.close-icon');
 const navLinks = document.querySelectorAll('.nav__link');
 const sections = document.querySelectorAll('section[id]');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -10,78 +8,110 @@ const moonIcon = document.getElementById('moon-icon');
 const sunIcon = document.getElementById('sun-icon');
 
 /*===== UTILITY FUNCTIONS =====*/
-function updateYear() {
-    const yearElement = document.getElementById('current-year');
-    yearElement.textContent = moment().year();
-}
+const updateYear = () => {
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+};
 
-function updateAge() {
-    const birthdate = moment('2000-12-22');
-    const age = moment().diff(birthdate, 'years');
+const updateAge = () => {
+    const birthdate = new Date('2000-12-22');
+    const age = Math.floor((new Date() - birthdate) / (365.25 * 24 * 60 * 60 * 1000));
     document.getElementById('age').textContent = age;
-}
+};
 
-function toggleMenuIcon() {
-    const toggle = document.querySelector('.nav__toggle');
-    _.toggleClass(toggle, 'toggle-x');
-}
-
-function applyTheme(theme) {
+const applyTheme = (theme) => {
+    const isDark = theme === 'dark';
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
     document.body.classList.add('theme-transition');
-    document.documentElement.style.setProperty('--body-bg', theme === 'dark' ? '#121212' : '#fff');
-    document.documentElement.style.setProperty('--text-color', theme === 'dark' ? '#e0e0e0' : 'var(--second-color)');
-    
-    moonIcon.style.display = theme === 'dark' ? 'none' : 'block';
-    sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
-
-    document.body.classList.toggle('dark-theme', theme === 'dark');
-
+    document.documentElement.style.setProperty('--body-bg', isDark ? '#121212' : '#fff');
+    document.documentElement.style.setProperty('--text-color', isDark ? '#e0e0e0' : 'var(--second-color)');
+    moonIcon.style.display = isDark ? 'none' : 'block';
+    sunIcon.style.display = isDark ? 'block' : 'none';
+    document.body.classList.toggle('dark-theme', isDark);
     setTimeout(() => document.body.classList.remove('theme-transition'), 300);
-}
+};
+
+const showToast = (message) => {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    toast.offsetHeight; // Trigger reflow
+    
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+        }, 2500);
+    });
+};
 
 /*===== MENU FUNCTIONALITY =====*/
-function toggleMenu() {
+const toggleMenu = () => {
     navMenu.classList.toggle('show');
     navToggle.classList.toggle('active');
-}
+};
 
-/*===== MENU SHOW =====*/
-const showMenu = (toggleId, navId) => {
-    const toggle = document.getElementById(toggleId),
-        nav = document.getElementById(navId)
-
-    if (toggle && nav) {
-        toggle.addEventListener('click', () => {
-            nav.classList.toggle('show')
-            toggle.classList.toggle('active')
-        })
-    }
-}
-showMenu('nav-toggle', 'nav-menu')
+const linkAction = function() {
+    navLinks.forEach(n => n.classList.remove('active'));
+    this.classList.add('active');
+    navMenu.classList.remove('show');
+};
 
 /*===== SKILLS ANIMATION =====*/
-function animateSkills() {
-    const skillBars = document.querySelectorAll('.skills__bar');
-    skillBars.forEach(bar => {
+const animateSkills = () => {
+    document.querySelectorAll('.skills__bar').forEach(bar => {
         const value = bar.parentElement.querySelector('.skills__percentage').textContent;
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             bar.style.width = value;
-            bar.addEventListener('transitionend', () => {
-                bar.classList.add('filled');
-            }, { once: true });
-        }, 300);
+            bar.addEventListener('transitionend', () => bar.classList.add('filled'), { once: true });
+        });
     });
-}
+};
 
 /*===== SCROLL REVEAL ANIMATION =====*/
-const sr = ScrollReveal({
-    origin: 'top',
-    distance: '80px',
-    duration: 2000,
-    reset: true
-});
+const initializeScrollReveal = () => {
+    ScrollReveal({
+        origin: 'top',
+        distance: '80px',
+        duration: 1000,
+        reset: true
+    }).reveal(
+        '.home__title, .button, .home__img, .home__social-icon, .about__img, .about__subtitle, .about__text, .skills__subtitle, .skills__text, .skill-item, .skills__img, .contact__input',
+        { delay: 200, interval: 200 }
+    );
+};
+
+/*===== SKILLS OBSERVER =====*/
+const initializeSkillsObserver = () => {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateSkills();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const skillsSection = document.querySelector('.skills');
+    if (skillsSection) observer.observe(skillsSection);
+};
+
+/*===== EMAIL COPY FUNCTIONALITY =====*/
+const handleEmailCopy = function(event) {
+    if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        event.preventDefault();
+        const email = this.getAttribute('href').replace('mailto:', '');
+        navigator.clipboard.writeText(email)
+            .then(() => showToast('Email copied to clipboard'))
+            .catch(err => {
+                console.error('Failed to copy email: ', err);
+                showToast('Failed to copy email');
+            });
+    }
+};
 
 /*===== EVENT LISTENERS =====*/
 document.addEventListener('DOMContentLoaded', () => {
@@ -90,113 +120,41 @@ document.addEventListener('DOMContentLoaded', () => {
     updateYear();
     document.body.classList.add('body-visible', 'loaded');
 
-    const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
-
     if (navToggle && navMenu) {
-        navToggle.addEventListener('click', () => {
-            console.log('Nav toggle clicked');
-            navMenu.classList.toggle('show');
-            navToggle.classList.toggle('active');
-            console.log('Nav menu classes:', navMenu.classList);
-        });
-
-        const navLinks = document.querySelectorAll('.nav__link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('show');
-                navToggle.classList.remove('active');
-            });
-        });
+        navToggle.addEventListener('click', toggleMenu);
+        navLinks.forEach(link => link.addEventListener('click', () => {
+            navMenu.classList.remove('show');
+            navToggle.classList.remove('active');
+        }));
     } else {
         console.error('Navigation elements not found');
     }
 
-    // Move the skillsObserver initialization inside the DOMContentLoaded event listener
-    const skillsObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateSkills();
-                skillsObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    skillsObserver.observe(document.querySelector('.skills'));
+    initializeSkillsObserver();
+    initializeScrollReveal();
 });
 
 darkModeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    applyTheme(newTheme);
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
 });
 
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', _.throttle(() => {
     const scrollY = window.scrollY;
-
     sections.forEach(section => {
         const sectionHeight = section.offsetHeight;
         const sectionTop = section.offsetTop - 58;
-        const sectionId = section.getAttribute('id');
+        const sectionId = section.id;
         const sectionLink = document.querySelector(`.nav__menu a[href*="${sectionId}"]`);
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            sectionLink.classList.add('active-link');
-        } else {
-            sectionLink.classList.remove('active-link');
+        if (sectionLink) {
+            sectionLink.classList.toggle('active-link', scrollY > sectionTop && scrollY <= sectionTop + sectionHeight);
         }
     });
-});
+}, 100));
 
 document.documentElement.style.scrollBehavior = 'smooth';
 
-/*===== INITIALIZATION =====*/
-showMenu('nav-toggle', 'nav-menu');
+navLinks.forEach(n => n.addEventListener('click', linkAction));
 
-// Create separate functions for ScrollReveal and SkillsObserver
-function initializeScrollReveal() {
-    // ScrollReveal Animations
-    sr.reveal('.home__title', {});
-    sr.reveal('.button', { delay: 200 });
-    sr.reveal('.home__img', { delay: 400, opacity: 1, distance: '20px' });
-    sr.reveal('.home__social-icon', { interval: 200 });
-    sr.reveal('.about__img', {});
-    sr.reveal('.about__subtitle', { delay: 400 });
-    sr.reveal('.about__text', { delay: 400 });
-    sr.reveal('.skills__subtitle', {});
-    sr.reveal('.skills__text', {});
-    sr.reveal('.skill-item', { interval: 100 });
-    sr.reveal('.skills__img', { delay: 600 });
-    sr.reveal('.contact__input', { interval: 200 });
-}
-
-function initializeSkillsObserver() {
-    const skillsObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateSkills();
-                skillsObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    skillsObserver.observe(document.querySelector('.skills'));
-}
-
-// Call the initialization functions
-initializeScrollReveal();
-initializeSkillsObserver();
-
-/*===== ACTIVE AND REMOVE MENU =====*/
-const navLink = document.querySelectorAll('.nav__link');   
-
-function linkAction(){
-  /*Active link*/
-  navLink.forEach(n => n.classList.remove('active'));
-  this.classList.add('active');
-  
-  /*Remove menu mobile*/
-  const navMenu = document.getElementById('nav-menu')
-  navMenu.classList.remove('show')
-}
-navLink.forEach(n => n.addEventListener('click', linkAction));
+document.querySelectorAll('.contact__button[href^="mailto:"], .home__social-icon[href^="mailto:"], .footer__icon.email-copy')
+    .forEach(emailLink => emailLink.addEventListener('click', handleEmailCopy));

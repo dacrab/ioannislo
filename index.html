@@ -1,132 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ioannis Lougiakis - IT Technician Portfolio</title>
-        <link rel="icon" href="./assets/curriculum.png">
-
-        <!-- Stylesheets -->
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-
-        <!-- Scripts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" defer></script>
-        <script src="https://unpkg.com/scrollreveal" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js" defer></script>
-        <script src="main.js" defer></script>
-    </head>
-    <body>
-        <header class="l-header">
-            <nav class="nav bd-grid">
-                <a href="#" class="nav__logo">Ioannis Lougiakis</a>
-                <div class="nav__menu" id="nav-menu">
-                    <ul class="nav__list">
-                        <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
-                        <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
-                        <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
-                        <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
-                        <li class="nav__item">
-                            <div class="dark-mode-toggle" id="dark-mode-toggle">
-                                <i class="fas fa-moon" id="moon-icon"></i>
-                                <i class="fas fa-sun" id="sun-icon"></i>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="nav__toggle" id="nav-toggle" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars menu-icon" aria-hidden="true"></i>
-                    <i class="fas fa-times close-icon" aria-hidden="true"></i>
-                </div>
-            </nav>
-        </header>
-
-        <main class="l-main">
-            <section class="home bd-grid" id="home">
-                <div class="home__data">
-                    <h1 class="home__title">Hi,<br>I'm <span class="home__title-color">Ioannis</span><br> IT Technician</h1>
-                    <div class="home__buttons">
-                        <a href="./assets/CV.pdf" class="button" download="Ioannis_Lougiakis_CV.pdf">Download CV</a>
-                        <a href="#contact" class="button">Contact</a>
-                    </div>
-                </div>
-                <div class="home__img">
-                    <img src="./assets/welcome.png" alt="Welcome" class="home__img-file">
-                </div>
-                <div class="home__social">
-                    <a href="https://www.facebook.com/ioannis.lougiakis" class="home__social-icon"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/ioannislougiakis" class="home__social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="mailto:ioannis.lougiakis@gmail.com" class="home__social-icon"><i class="fas fa-envelope"></i></a>
-                </div>
-            </section>
-
-            <section class="about section" id="about">
-                <h2 class="section-title">About</h2>
-                <div class="about__container bd-grid">
-                    <div class="about__img">
-                        <img src="./assets/about.png" alt="About Ioannis">
-                    </div>
-                    <div class="about__content">
-                        <h2 class="about__subtitle">I'm Ioannis Lougiakis Aias</h2>
-                        <p class="about__text">Hello, I'm Ioannis Lougiakis Aias, a <span id="age"></span>-year-old IT technician passionate about navigating the complexities of technology. With a robust background in IT infrastructure and systems management, I thrive on solving intricate problems and optimizing operations. I bring a meticulous approach to every project, ensuring that systems not only function smoothly but also contribute to enhanced productivity. My proactive stance on staying updated with the latest in technology ensures that I am always ready to implement cutting-edge solutions. I take pride in delivering tailored IT strategies that meet the unique needs of each client and organization, making me a dependable partner in achieving technological excellence.</p>           
-                    </div>                                   
-                </div>
-            </section>
-
-            <section class="skills section" id="skills">
-                <h2 class="section-title">Skills</h2>
-                <div class="skills__container bd-grid">
-                    <div class="skills__content">
-                        <h2 class="skills__subtitle">Professional Skills</h2>
-                        <p class="skills__text">My proficiency in these technologies allows me to create engaging web solutions that meet both user needs and business objectives. I'm passionate about leveraging technology to drive innovation and deliver results.</p>
-                        <div class="skills__icons">
-                            <div class="skill-item"><i class="fab fa-html5"></i><span class="skill-description">HTML5</span></div>
-                            <div class="skill-item"><i class="fab fa-css3-alt"></i><span class="skill-description">CSS3</span></div>
-                            <div class="skill-item"><i class="fab fa-js-square"></i><span class="skill-description">JavaScript</span></div>
-                            <div class="skill-item"><i class="fab fa-java"></i><span class="skill-description">Java</span></div>
-                            <div class="skill-item"><i class="fas fa-code c-lang"></i><span class="skill-description">C</span></div>
-                            <div class="skill-item"><i class="fab fa-cuttlefish"></i><span class="skill-description">C++</span></div>
-                            <div class="skill-item"><i class="fab fa-php"></i><span class="skill-description">PHP</span></div>
-                            <div class="skill-item"><i class="fab fa-unity"></i><span class="skill-description">Unity</span></div>
-                            <div class="skill-item"><i class="fas fa-gamepad"></i><span class="skill-description">Unreal Engine</span></div>
-                            <div class="skill-item"><i class="fa-solid fa-camera"></i><span class="skill-description">Photoshop</span></div>
-                            <div class="skill-item"><i class="fas fa-video"></i><span class="skill-description">Adobe Premiere</span></div>
-                            <div class="skill-item"><i class="fab fa-wordpress"></i><span class="skill-description">WordPress</span></div>
-                            <div class="skill-item"><i class="fas fa-cube"></i><span class="skill-description">3Ds Max</span></div>
-                        </div>
-                    </div>
-                    <div class="skills__img">              
-                        <img src="./assets/skills.png" alt="Skills illustration">
-                    </div>
-                </div>
-            </section>
-
-            <section class="contact section" id="contact">
-                <h2 class="section-title">Get in Touch</h2>
-                <h3 class="contact__title">Contact Me</h3>
-                <div class="contact__container bd-grid">
-                    <div class="contact__buttons">
-                        <a href="mailto:ioannis.lougiakis@gmail.com" class="contact__button">
-                            <i class="fas fa-envelope"></i> Email
-                        </a>
-                        <a href="https://www.instagram.com/ioannislougiakis" class="contact__button">
-                            <i class="fab fa-instagram"></i> Instagram
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <p class="footer__title">Ioannis Lougiakis</p>
-            <div class="footer__social">
-                <a href="https://www.facebook.com/ioannis.lougiakis" class="footer__icon"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.instagram.com/ioannislougiakis" class="footer__icon"><i class="fab fa-instagram"></i></a>
-                <a href="mailto:ioannis.lougiakis@gmail.com" class="footer__icon"><i class="fas fa-envelope"></i></a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ioannis Lougiakis - IT Technician Portfolio">
+    <title>Ioannis Lougiakis - IT Technician Portfolio</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" defer></script>
+    <script src="https://unpkg.com/scrollreveal" defer></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <header class="l-header">
+        <nav class="nav bd-grid">
+            <a href="#" class="nav__logo">Ioannis Lougiakis</a>
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="#home" class="nav__link active-link">Home</a></li>
+                    <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+                    <li class="nav__item"><a href="#skills" class="nav__link">Skills</a></li>
+                    <li class="nav__item"><a href="#contact" class="nav__link">Contact</a></li>
+                    <li class="nav__item">
+                        <button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle dark mode">
+                            <i class="fas fa-moon" id="moon-icon"></i>
+                            <i class="fas fa-sun" id="sun-icon"></i>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <p class="footer__copy">&#169; <span id="current-year"></span> Ioannis Lougiakis Aias. All rights reserved</p>
-        </footer>
-    </body>
+            <div class="nav__toggle" id="nav-toggle">
+                <i class="fas fa-bars" id="menu-icon"></i>
+                <i class="fas fa-times" id="close-icon"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="l-main">
+        <!-- Home Section -->
+        <section class="home bd-grid" id="home">
+            <div class="home__data">
+                <h1 class="home__title">Hi,<br>I'm <span class="home__title-color">Ioannis</span><br> IT Technician</h1>
+                <p class="home__description">Passionate about technology with <span class="highlight">keen attention to detail</span></p>
+                <div class="home__buttons">
+                    <a href="./assets/IOANNIS_LOUGIAKIS_CV.pdf" class="button" download="Ioannis_Lougiakis_CV.pdf">
+                        <i class="fas fa-download"></i>
+                        <span class="button-text">Download CV</span>
+                    </a>
+                    <a href="#contact" class="button">
+                        <i class="fas fa-envelope"></i>
+                        <span class="button-text">Contact</span>
+                    </a>
+                </div>
+            </div>
+            <div class="home__img">
+                <img src="./assets/welcome.png" alt="Welcome illustration" class="home__img-file">
+            </div>
+            <div class="home__social">
+                <a href="https://www.facebook.com/ioannis.lougiakis" class="home__social-icon" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                <a href="https://www.instagram.com/ioannislo" class="home__social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                <a href="mailto:ioannis.lougiakis@gmail.com" class="home__social-icon" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about section" id="about">
+            <h2 class="section-title">About</h2>
+            <div class="about__container bd-grid">
+                <div class="about__img">
+                    <img src="./assets/about.png" alt="About Ioannis">
+                </div>
+                <div class="about__content">
+                    <h2 class="about__subtitle">I'm Ioannis Lougiakis Aias</h2>
+                    <p class="about__text">Hello, I'm <span class="highlight">Ioannis Lougiakis Aias</span>, a <span id="age"></span>-year-old <span class="highlight">IT technician</span> passionate about navigating the complexities of technology. With a <span class="highlight">robust background in IT infrastructure and systems management</span>, I thrive on <span class="highlight">solving intricate problems and optimizing operations</span>. I bring a <span class="highlight">meticulous approach</span> and <span class="highlight">attention to detail</span> to every project, ensuring that systems not only function smoothly but also contribute to <span class="highlight">enhanced productivity</span>. My <span class="highlight">proactive stance</span> on staying updated with the latest in technology ensures that I am always ready to implement <span class="highlight">cutting-edge solutions</span>. I take pride in delivering <span class="highlight">tailored IT strategies</span> that meet the unique needs of each client and organization, making me a <span class="highlight">dependable partner in achieving technological excellence</span>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills section" id="skills">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills__container bd-grid">
+                <div class="skills__content">
+                    <h2 class="skills__subtitle">Professional Skills</h2>
+                    <p class="skills__text">My proficiency in these technologies, combined with my <span class="highlight">attention to detail</span>, allows me to create engaging and robust web solutions that meet both user needs and business objectives. I'm passionate about leveraging technology to drive innovation and deliver results.</p>
+                    <div class="skills__icons">
+                        <div class="skill-item"><i class="fab fa-html5" aria-hidden="true"></i><span class="skill-description">HTML5</span></div>
+                        <div class="skill-item"><i class="fab fa-css3-alt" aria-hidden="true"></i><span class="skill-description">CSS3</span></div>
+                        <div class="skill-item"><i class="fab fa-js-square" aria-hidden="true"></i><span class="skill-description">JavaScript</span></div>
+                        <div class="skill-item"><i class="fab fa-java" aria-hidden="true"></i><span class="skill-description">Java</span></div>
+                        <div class="skill-item"><i class="fas fa-code c-lang" aria-hidden="true"></i><span class="skill-description">C</span></div>
+                        <div class="skill-item"><i class="fab fa-cuttlefish" aria-hidden="true"></i><span class="skill-description">C++</span></div>
+                        <div class="skill-item"><i class="fab fa-php" aria-hidden="true"></i><span class="skill-description">PHP</span></div>
+                        <div class="skill-item"><i class="fab fa-unity" aria-hidden="true"></i><span class="skill-description">Unity</span></div>
+                        <div class="skill-item"><i class="fas fa-gamepad" aria-hidden="true"></i><span class="skill-description">Unreal Engine</span></div>
+                        <div class="skill-item"><i class="fa-solid fa-camera" aria-hidden="true"></i><span class="skill-description">Photoshop</span></div>
+                        <div class="skill-item"><i class="fas fa-video" aria-hidden="true"></i><span class="skill-description">Adobe Premiere</span></div>
+                        <div class="skill-item"><i class="fab fa-wordpress" aria-hidden="true"></i><span class="skill-description">WordPress</span></div>
+                        <div class="skill-item"><i class="fas fa-cube" aria-hidden="true"></i><span class="skill-description">3Ds Max</span></div>
+                    </div>
+                </div>
+                <div class="skills__img">
+                    <img src="./assets/skills.png" alt="Skills illustration">
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact section" id="contact">
+            <h2 class="section-title">Get in Touch</h2>
+            <h3 class="contact__title">Contact Me</h3>
+            <div class="contact__container bd-grid">
+                <div class="contact__buttons">
+                    <a href="mailto:ioannis.lougiakis@gmail.com" class="contact__button">
+                        <i class="fas fa-envelope"></i>
+                        <span class="button-text">Email</span>
+                    </a>
+                    <a href="https://www.instagram.com/ioannislo" class="contact__button">
+                        <i class="fab fa-instagram"></i>
+                        <span class="button-text">Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p class="footer__title">Ioannis Lougiakis</p>
+        <div class="footer__social">
+            <a href="https://www.facebook.com/ioannis.lougiakis" class="footer__icon" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+            <a href="https://www.instagram.com/ioannislo" class="footer__icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+            <a href="mailto:ioannis.lougiakis@gmail.com" class="footer__icon email-copy" aria-label="Email"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+        </div>
+        <p class="footer__copy">&#169; <span id="current-year"></span> Ioannis Lougiakis Aias. All rights reserved</p>
+    </footer>
+</body>
 </html>

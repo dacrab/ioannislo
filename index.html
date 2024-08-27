@@ -7,11 +7,16 @@
     <title>Ioannis Lougiakis - IT Technician Portfolio</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="assets/welcome.png" as="image">
+    <link rel="preload" href="assets/about.png" as="image">
+    <link rel="preload" href="assets/skills.png" as="image">
     
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" defer></script>
@@ -36,15 +41,16 @@
                     </li>
                 </ul>
             </div>
-            <div class="nav__toggle" id="nav-toggle">
-                <i class="fas fa-bars" id="menu-icon"></i>
-                <i class="fas fa-times" id="close-icon"></i>
-            </div>
+            <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
     </header>
 
     <main class="l-main">
-        <!-- Home Section -->
         <section class="home bd-grid" id="home">
             <div class="home__data">
                 <h1 class="home__title">Hi,<br>I'm <span class="home__title-color">Ioannis</span><br> IT Technician</h1>
@@ -61,7 +67,7 @@
                 </div>
             </div>
             <div class="home__img">
-                <img src="./assets/welcome.png" alt="Welcome illustration" class="home__img-file">
+                <img src="./assets/welcome.png" alt="Welcome illustration" class="home__img-file" loading="lazy">
             </div>
             <div class="home__social">
                 <a href="https://www.facebook.com/ioannis.lougiakis" class="home__social-icon" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
@@ -70,12 +76,11 @@
             </div>
         </section>
 
-        <!-- About Section -->
         <section class="about section" id="about">
             <h2 class="section-title">About</h2>
             <div class="about__container bd-grid">
                 <div class="about__img">
-                    <img src="./assets/about.png" alt="About Ioannis">
+                    <img src="./assets/about.png" alt="About Ioannis" loading="lazy">
                 </div>
                 <div class="about__content">
                     <h2 class="about__subtitle">I'm Ioannis Lougiakis Aias</h2>
@@ -84,7 +89,6 @@
             </div>
         </section>
 
-        <!-- Skills Section -->
         <section class="skills section" id="skills">
             <h2 class="section-title">Skills</h2>
             <div class="skills__container bd-grid">
@@ -108,12 +112,11 @@
                     </div>
                 </div>
                 <div class="skills__img">
-                    <img src="./assets/skills.png" alt="Skills illustration">
+                    <img src="./assets/skills.png" alt="Skills illustration" loading="lazy">
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
         <section class="contact section" id="contact">
             <h2 class="section-title">Get in Touch</h2>
             <h3 class="contact__title">Contact Me</h3>

@@ -60,17 +60,6 @@ const linkAction = function() {
     navMenu.classList.remove('show');
 };
 
-/*===== SKILLS ANIMATION =====*/
-const animateSkills = () => {
-    document.querySelectorAll('.skills__bar').forEach(bar => {
-        const value = bar.parentElement.querySelector('.skills__percentage').textContent;
-        requestAnimationFrame(() => {
-            bar.style.width = value;
-            bar.addEventListener('transitionend', () => bar.classList.add('filled'), { once: true });
-        });
-    });
-};
-
 /*===== SCROLL REVEAL ANIMATION =====*/
 const initializeScrollReveal = () => {
     ScrollReveal({
@@ -82,21 +71,6 @@ const initializeScrollReveal = () => {
         '.home__title, .button, .home__img, .home__social-icon, .about__img, .about__subtitle, .about__text, .skills__subtitle, .skills__text, .skill-item, .skills__img, .contact__input',
         { delay: 200, interval: 200 }
     );
-};
-
-/*===== SKILLS OBSERVER =====*/
-const initializeSkillsObserver = () => {
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateSkills();
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    const skillsSection = document.querySelector('.skills');
-    if (skillsSection) observer.observe(skillsSection);
 };
 
 /*===== EMAIL COPY FUNCTIONALITY =====*/
@@ -130,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Navigation elements not found');
     }
 
-    initializeSkillsObserver();
     initializeScrollReveal();
 });
 

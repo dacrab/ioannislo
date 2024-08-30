@@ -171,9 +171,11 @@ const addInteractionFeedback = () => {
 /*===== PROGRESSIVE ENHANCEMENT =====*/
 const enhanceProgressively = () => {
     if ('IntersectionObserver' in window) {
-        // Implement advanced lazy loading and animations using Intersection Observer
+        // Implement lazy loading using Intersection Observer
+        initializeLazyLoading();
     } else {
         // Fallback to simpler implementation for older browsers
+        document.querySelectorAll('img[data-src]').forEach(img => img.src = img.dataset.src);
     }
 
     if (CSS.supports('backdrop-filter', 'blur(10px)')) {
@@ -236,7 +238,6 @@ const initialize = () => {
 
     initializeScrollReveal();
     addEventListeners();
-    initializeLazyLoading();
     addInteractionFeedback();
     enhanceProgressively();
 };

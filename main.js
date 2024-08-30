@@ -31,11 +31,11 @@ const utils = {
         setTimeout(() => document.body.classList.remove('theme-transition'), 300);
     },
     showToast: (message) => {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
+        const toast = Object.assign(document.createElement('div'), {
+            className: 'toast',
+            textContent: message
+        });
         document.body.appendChild(toast);
-        
         requestAnimationFrame(() => {
             toast.classList.add('show');
             setTimeout(() => {
@@ -104,9 +104,7 @@ const initializeScrollReveal = () => {
         ]
     };
 
-    Object.values(revealConfigs).flat().forEach(({ selector, config }) => {
-        sr.reveal(selector, config);
-    });
+    Object.values(revealConfigs).flat().forEach(({ selector, config }) => sr.reveal(selector, config));
 };
 
 /*===== EMAIL COPY FUNCTIONALITY =====*/

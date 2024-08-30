@@ -32,7 +32,7 @@ Welcome to the magical realm of Ioannis Lougiakis, where bits and bytes dance to
 
 ## 🚀 Quick Start (No Rocket Science Required)
 
-1. Summon the repository: `git clone [https://github.com/dacrab/friends_portfolio]`
+1. Summon the repository: `git clone https://github.com/dacrab/friends_portfolio`
 2. Chant the sacred words (or just double-click) `index.html`
 3. Wave your wand (or mouse) over `style.css` to customize
 4. Sprinkle some extra magic dust in `main.js` if you're feeling adventurous

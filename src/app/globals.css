@@ -1,0 +1,734 @@
+@import "tailwindcss";
+
+/*
+============================================
+VARIABLES
+============================================
+*/
+
+/* Light Mode & Base Variables */
+:root {
+  --background: #ffffff; /* White */
+  --background-rgb: 255, 255, 255;
+  --foreground: #000000; /* Black */
+  --accent: #ff0000; /* Bright Red */
+  --muted: #333333; /* Darker Grey for muted text */
+  --border: var(--foreground); /* Black borders */
+  --subtle-bg: #eeeeee; /* Very light grey for subtle backgrounds */
+  --vh: 1vh; /* Custom viewport height variable for mobile */
+}
+
+/* Theme Variables (used by components, adapt to light/dark mode) */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-secondary: var(--accent); /* Accent can be secondary for brutalism */
+  --color-tertiary: var(--accent); /* Accent can be tertiary */
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-subtle-bg: var(--subtle-bg);
+  --font-mono: 'Space Mono', monospace;
+  --font-display: 'Anton', sans-serif;
+  --font-sans: var(--font-mono);
+}
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000000;
+    --background-rgb: 0, 0, 0;
+    --foreground: #ffffff;
+    --muted: #aaaaaa; /* Lighter Grey for dark mode */
+    --subtle-bg: #1a1a1a; /* Darker subtle background for dark mode */
+  }
+}
+
+/*
+============================================
+BASE STYLES
+============================================
+*/
+@layer base {
+  html, body {
+    min-height: 100%;
+    height: auto;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    font-smooth: never; /* For sharper text rendering */
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  a {
+    color: var(--foreground);
+    text-decoration: underline; /* Brutalist links are often underlined */
+    text-underline-offset: 2px;
+    transition: color 0.1s ease, background-color 0.1s ease; /* Faster transitions */
+  }
+
+  a:hover {
+    color: var(--background); /* Invert colors on hover */
+    background-color: var(--foreground);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--background);
+  }
+}
+
+/*
+============================================
+LAYOUT & STRUCTURE
+============================================
+*/
+
+/* Smooth scrolling setup */
+.smooth-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.smooth-content {
+  will-change: transform;
+}
+
+/* Section styling */
+section {
+  position: relative;
+  padding: 6rem 0;
+  overflow: hidden;
+}
+
+.section-divider {
+  height: 3px;
+  background-color: var(--color-foreground);
+  opacity: 0.1;
+  margin: 0;
+}
+
+/* Grid layout */
+.brutalist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+/*
+============================================
+COMPONENTS
+============================================
+*/
+
+/* Brutalist Borders */
+.brutalist-border {
+  border: 2px solid var(--color-foreground);
+  position: relative;
+}
+
+.brutalist-border-thick {
+  border: 3px solid var(--color-foreground);
+  position: relative;
+}
+
+/* Brutalist Buttons */
+.brutalist-button {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+  border: 2px solid var(--color-foreground);
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  text-decoration: none; /* Ensure buttons don't get underlines from global 'a' style */
+}
+
+.brutalist-button:hover {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-background);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--color-foreground);
+  text-decoration: none;
+}
+
+.brutalist-button:active {
+  transform: translate(0px, 0px);
+  box-shadow: 0px 0px 0 var(--color-foreground);
+}
+
+.brutalist-button--secondary {
+  background-color: transparent;
+  color: var(--color-foreground);
+  border-color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.brutalist-button--secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+  border-color: var(--color-accent);
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--color-foreground);
+  text-decoration: none;
+}
+
+/* Brutalist Card */
+.brutalist-card {
+  background-color: var(--color-background);
+  border: 2px solid var(--color-foreground);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.brutalist-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 3px 3px 0 var(--color-foreground);
+}
+
+.brutalist-card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-subtle-bg),
+    var(--color-subtle-bg) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  z-index: -1;
+  transition: transform 0.3s ease;
+}
+
+.brutalist-card:hover::before {
+  transform: translate(5px, 5px);
+}
+
+.brutalist-card-header {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-foreground);
+  padding-bottom: 0.5rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.brutalist-card-body {
+  padding: 0.5rem 0;
+}
+
+.brutalist-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.brutalist-card-tags span {
+  background-color: var(--color-subtle-bg);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.brutalist-card-tags span:hover {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+/* Typography */
+.brutalist-heading {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.brutalist-subheading {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px var(--color-foreground);
+  color: transparent;
+}
+
+/* Menu Styles */
+.menu-item a {
+  position: relative;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.menu-item a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-item a:hover::after,
+.menu-item a.active::after {
+  width: 100%;
+}
+
+.menu-item a:hover {
+  transform: skew(-3deg);
+}
+
+.brutalist-close-btn {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brutalist-close-btn:hover {
+  color: var(--color-accent);
+}
+
+/* Social Links */
+.social-item {
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+}
+
+.social-item:hover {
+  transform: translateY(-2px) skew(-5deg);
+}
+
+/*
+============================================
+UTILITIES & EFFECTS
+============================================
+*/
+
+/* Custom Cursor (Desktop) */
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border: none;
+  background-color: var(--color-foreground);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: width 0.1s, height 0.1s, background-color 0.1s, opacity 0.1s;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-accent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+/* Noise Background */
+.noise-bg {
+  position: relative;
+}
+
+.noise-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Clip Paths */
+.clip-path-slant {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.clip-path-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 100%);
+}
+
+/* Color Blocks */
+.color-block {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.1;
+  transition: transform 1s ease;
+}
+
+/* Background Patterns */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Interactive Hover Effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Animated Underline Effect */
+.animated-underline {
+  position: relative;
+}
+
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.animated-underline:hover::after {
+  width: 100%;
+}
+
+/* Click effect for brutalist navigation */
+.brutalist-click-effect {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9000;
+  transform: translate(-50%, -50%);
+}
+
+/*
+============================================
+ANIMATIONS
+============================================
+*/
+
+/* GSAP Animation Utilities */
+.reveal-text {
+  opacity: 0;
+}
+
+.reveal-image {
+  opacity: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.reveal-image.revealed {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 1;
+}
+
+.split-parent {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.split-child {
+  display: inline-block;
+}
+
+.char, .word {
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+.gsap-marker-scroller-start,
+.gsap-marker-scroller-end,
+.gsap-marker-start,
+.gsap-marker-end,
+.gsap-marker {
+  display: none !important;
+}
+
+[data-animate] {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Parallax Elements */
+.parallax {
+  will-change: transform;
+}
+
+/* Marquee Animation */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  --marquee-width: 100%;
+  --offset: 20vw;
+  --move-initial: calc(-25% + var(--offset));
+  --move-final: calc(-50% + var(--offset));
+}
+
+.marquee-content {
+  width: fit-content;
+  display: flex;
+  position: relative;
+  transform: translate3d(var(--move-initial), 0, 0);
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate3d(var(--move-initial), 0, 0);
+  }
+
+  100% {
+    transform: translate3d(var(--move-final), 0, 0);
+  }
+}
+
+/* Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+  animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/*
+============================================
+GLOBAL STATE CLASSES (e.g. Menu Open/Closing)
+============================================
+*/
+.menu-closing {
+  pointer-events: none; /* Prevent interactions while closing */
+}
+
+.mobile-menu-bg-reveal {
+  clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+  background-color: var(--background) !important; /* Force solid background */
+  opacity: 1 !important; /* Ensure full opacity */
+}
+
+.menu-open-brutalist {
+  overflow: hidden !important;
+}
+
+/*
+============================================
+MOBILE & RESPONSIVE STYLES
+============================================
+*/
+@media (max-width: 768px) {
+  /* General Mobile Adjustments */
+  html {
+    font-size: 15px;
+  }
+
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  section {
+    padding: 4rem 0;
+  }
+
+  /* Cursor Hiding on Mobile & Coarse Pointer Devices */
+  .cursor, .cursor-dot {
+    display: none !important;
+  }
+  * { /* Applies to elements within this media query context */
+    cursor: auto !important;
+  }
+
+  /* Component Adjustments */
+  .brutalist-border {
+    border-width: 1px;
+  }
+
+  .brutalist-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .brutalist-card {
+    padding: 1rem;
+  }
+
+  .brutalist-card:hover { /* Keep hover effect if desired, or simplify */
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--color-foreground);
+  }
+
+  /* Typography Adjustments */
+  .brutalist-heading {
+    font-size: 2.5rem !important;
+    line-height: 1 !important;
+  }
+
+  /* Viewport Height Fixes */
+  .h-screen {
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  .min-h-screen {
+    min-height: 100vh; /* Fallback */
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+
+  /* Touch Interaction Optimizations */
+  a, button, .brutalist-button, [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    min-height: 44px; /* Optimize touch targets */
+    min-width: 44px;
+  }
+
+  /* Animation Simplifications/Disabling */
+  .brutalist-card::before { /* Reduce animation complexity */
+    background: var(--color-subtle-bg); /* Simpler background, no repeating gradient */
+  }
+
+  .glitch {
+    animation: none; /* Disable glitch animation on mobile */
+  }
+
+  /* Grid Adjustments */
+  .brutalist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  /* Background Pattern Adjustments */
+  .bg-grid-pattern {
+    background-size: 15px 15px;
+    background-image:
+      linear-gradient(to right, rgba(var(--foreground-rgb), 0.04) 0.5px, transparent 0.5px),
+      linear-gradient(to bottom, rgba(var(--foreground-rgb), 0.04) 0.5px, transparent 0.5px);
+  }
+
+  /* Performance Optimizations */
+  .brutalist-heading,
+  h1, h2, h3 {
+    text-rendering: optimizeSpeed;
+  }
+
+  /* Improve tap target spacing (example) */
+  .space-x-4 { /* This overrides Tailwind's space-x-4 specifically on mobile */
+    @apply space-x-5;
+  }
+
+  /* Mobile Menu Specific Styles */
+  body.menu-open { /* Prevent scrolling when menu is open */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  .menu-item a,
+  .social-item { /* Increase touch target sizes */
+    min-height: 44px; /* Ensure this is applied if not covered by general touch target rule */
+    display: flex;
+    align-items: center;
+  }
+
+  .menu-item a { /* Improved menu styling */
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    line-height: 1.1;
+  }
+
+  /* Add brutalist jagged edges to menu items */
+  .menu-item:nth-child(odd) a {
+    clip-path: polygon(0 0, 100% 0, 97% 100%, 0% 100%);
+  }
+
+  .menu-item:nth-child(even) a {
+    clip-path: polygon(3% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  /* Brutalist diagonal dividers */
+  .menu-divider {
+    transform: skew(-15deg);
+    transform-origin: left;
+  }
+
+  /* Remove backdrop filter for better performance on header */
+  header {
+    background-color: var(--background);
+  }
+}

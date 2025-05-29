@@ -2,14 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { isMobileDevice, prefersReducedMotion } from '@/utils/deviceUtils';
-import { scrollToElement as brutalistScrollTo } from '@/utils/gsapUtils';
-
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollToPlugin);
-}
+import { scrollToElement as brutalistScrollTo, registerGSAPPlugins } from '@/utils/gsapUtils';
 
 const LOGO_TEXT = "BRUTALIST·PORTFOLIO";
 const NAV_ITEMS = [
@@ -27,7 +21,9 @@ const Navigation = () => {
   // Component State
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(NAV_ITEMS[0].id);
-  const [isMobile, setIsMobile] = useState(false);
+  // Initialize isMobile state directly using isMobileDevice utility.
+  // isMobileDevice handles window check and caches its result.
+  const [isMobile, setIsMobile] = useState(isMobileDevice());
   
   // Refs for DOM elements and scroll position
   const headerRef = useRef<HTMLElement>(null);
@@ -35,21 +31,26 @@ const Navigation = () => {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const scrollPosRef = useRef<number>(0); // Stores scroll position when mobile menu opens
   
-  // Effect: Detect if the device is mobile on mount and resize
+  // Effect: Register GSAP plugins once on component mount
   useEffect(() => {
-    const checkIsMobile = () => setIsMobile(isMobileDevice());
-    checkIsMobile(); // Initial check
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
+    registerGSAPPlugins();
   }, []);
+
+  // Effect: Update isMobile state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(isMobileDevice());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty dependency array ensures this runs only on mount and unmount
   
   // Callback: Handle scroll events to determine the active section
   const handleScroll = useCallback(() => {
     const viewportHeight = window.innerHeight;
-    let newActiveSection = activeSection; // Default to current active section
+    let newActiveSection = activeSection; 
     let maxVisibility = 0;
     
-    // Determine which section is most visible in the viewport
     NAV_ITEMS.forEach(({ id }) => {
       const sectionElement = document.getElementById(id);
       if (!sectionElement) return;
@@ -59,7 +60,6 @@ const Navigation = () => {
       const visibleBottom = Math.min(viewportHeight, rect.bottom);
       const visibleHeight = Math.max(0, visibleBottom - visibleTop);
       
-      // Using proportion of viewport occupied by the visible part of the section
       const visibilityProportion = visibleHeight / viewportHeight; 
       
       if (visibilityProportion > maxVisibility) {
@@ -68,7 +68,6 @@ const Navigation = () => {
       }
     });
     
-    // Prioritize 'home' section if scrolled very close to the top
     if (window.scrollY < 100) {
       newActiveSection = 'home';
     }
@@ -76,9 +75,9 @@ const Navigation = () => {
     if (newActiveSection !== activeSection) {
       setActiveSection(newActiveSection);
     }
-  }, [activeSection]); // Depends on activeSection to compare and update
+  }, [activeSection]); 
 
-  // Effect: Set up and clean up scroll event listener
+  // Effect: Set up and clean up scroll event listener for active section highlighting
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check on mount
@@ -92,45 +91,39 @@ const Navigation = () => {
     const menuItems = menuOverlayRef.current.querySelectorAll<HTMLElement>('.menu-item-brutalist');
     
     if (prefersReducedMotion()) {
-      gsap.set(menuItems, { opacity: 1, x: 0 }); // Set final state directly
+      gsap.set(menuItems, { opacity: 1, x: 0 }); 
     } else {
-      gsap.set(menuItems, { opacity: 0, x: -20 }); // Initial state for animation
+      gsap.set(menuItems, { opacity: 0, x: -20 }); 
       gsap.to(menuItems, { 
         opacity: 1, 
         x: 0,
-        stagger: 0.05, // Quick stagger for items
+        stagger: 0.05, 
         duration: 0.2,
         ease: 'power1.out',
       });
     }
-  }, [isMenuOpen, isMobile]); // Runs when menu state or mobile state changes
+  }, [isMenuOpen, isMobile]); 
 
   // Callback: Close the mobile menu
   const closeMenu = useCallback((preserveScrollPosition = false) => {
     if (!isMenuOpen || !menuOverlayRef.current || !menuButtonRef.current) return;
 
-    // Restore body scrolling
     document.body.classList.remove('menu-open-brutalist');
-    document.body.style.position = '';
     document.body.style.top = '';
-    document.body.style.width = '';
     
     if (!preserveScrollPosition) {
-        window.scrollTo(0, scrollPosRef.current); // Restore original scroll position
+        window.scrollTo(0, scrollPosRef.current); 
     }
     
-    // Animate menu overlay out
     gsap.to(menuOverlayRef.current, { 
       opacity: 0, 
       duration: 0.1, 
       ease: 'none', 
       onComplete: () => {
-        // Hide after animation to prevent interaction and improve performance
         if (menuOverlayRef.current) menuOverlayRef.current.style.display = 'none';
       }
     });
     
-    // Animate menu button back to original state
     gsap.to(menuButtonRef.current, {
       rotation: 0, 
       duration: 0.2, 
@@ -138,33 +131,27 @@ const Navigation = () => {
     });
 
     setIsMenuOpen(false);
-  }, [isMenuOpen]); // Depends on isMenuOpen to allow closing
+  }, [isMenuOpen]); 
 
   // Callback: Toggle the mobile menu (open/close)
   const toggleMenu = useCallback(() => {
     if (isMenuOpen) {
-      closeMenu(false); // Close if open, don't preserve scroll (manual toggle)
+      closeMenu(false); 
     } else {
-      // Open menu
       if (!menuOverlayRef.current || !menuButtonRef.current) return;
 
-      scrollPosRef.current = window.scrollY; // Store current scroll position
-      // Prevent body scrolling
-      document.body.style.position = 'fixed';
+      scrollPosRef.current = window.scrollY; 
       document.body.style.top = `-${scrollPosRef.current}px`;
-      document.body.style.width = '100%';
       document.body.classList.add('menu-open-brutalist');
       
-      // Animate menu overlay in
       menuOverlayRef.current.style.display = 'flex';
       gsap.fromTo(menuOverlayRef.current, 
         { opacity: 0 },
-        { opacity: 1, duration: 0.1, ease: 'none' } // Fast fade-in
+        { opacity: 1, duration: 0.1, ease: 'none' } 
       );
       
-      // Animate menu button
       gsap.to(menuButtonRef.current, {
-        rotation: 90, // Rotate to 'X' or similar
+        rotation: 90, 
         duration: 0.2, 
         ease: 'power1.inOut'
       });
@@ -178,17 +165,14 @@ const Navigation = () => {
     if (!headerRef.current) return;
 
     const headerHeight = headerRef.current.offsetHeight;
-    // Scroll to top for 'home', otherwise offset by header height
     const scrollOffset = sectionId === 'home' ? 0 : -headerHeight;
 
-    // Use utility for smooth scrolling
     brutalistScrollTo(sectionId, isMobile ? 0.2 : 0.3, scrollOffset);
 
     if (isMenuOpen && isMobile) {
-      // Close menu and preserve scroll position targeted by the link
       closeMenu(true); 
     }
-    setActiveSection(sectionId); // Immediately set active section
+    setActiveSection(sectionId); 
   }, [isMobile, isMenuOpen, closeMenu]);
   
   return (
@@ -196,8 +180,7 @@ const Navigation = () => {
       {/* Fixed Header */}
       <header 
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-foreground transition-all duration-200 ease-out"
-        style={{ padding: '0.75rem 1rem' }} // Example padding, adjust as needed
+        className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-foreground transition-all duration-200 ease-out px-4 py-3"
       >
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo */}
@@ -219,7 +202,7 @@ const Navigation = () => {
                 className={`nav-link-brutalist px-3 py-2 uppercase font-mono text-sm hover:bg-foreground hover:text-background ${
                   activeSection === id ? 'bg-foreground text-background' : 'text-foreground'
                 } transition-colors duration-100`}
-                data-section={id} // Useful for debugging or E2E tests
+                data-section={id}
               >
                 {label}
               </a>
@@ -227,16 +210,15 @@ const Navigation = () => {
           </nav>
           
           {/* Mobile Menu Toggle Button */}
-          {isMobile && ( // Only render toggle button on mobile
+          {isMobile && (
             <button
               ref={menuButtonRef}
               onClick={toggleMenu}
-              className="p-2 focus:outline-none" // md:hidden is implicitly handled by isMobile condition
+              className="p-2 focus:outline-none"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu-overlay"
             >
-              {/* Brutalist Hamburger Icon */}
               <div className="space-y-1.5">
                 <span className="block w-6 h-0.5 bg-foreground"></span>
                 <span className="block w-6 h-0.5 bg-foreground"></span>
@@ -247,13 +229,12 @@ const Navigation = () => {
         </div>
       </header>
       
-      {/* Mobile Menu Overlay - Conditionally rendered for mobile devices */}
+      {/* Mobile Menu Overlay */}
       {isMobile && (
         <div
           id="mobile-menu-overlay"
           ref={menuOverlayRef}
           className="fixed inset-0 z-40 bg-background flex-col items-center justify-center hidden"
-          // `hidden` class sets display: none; GSAP manages display during animation.
         >
           <nav className="flex flex-col items-center text-center">
             {NAV_ITEMS.map(({ id, label }) => (
@@ -262,16 +243,14 @@ const Navigation = () => {
                 href={`#${id}`}
                 onClick={(e) => scrollToSection(e, id)}
                 className="menu-item-brutalist block py-4 text-2xl uppercase font-mono hover:bg-foreground hover:text-background w-screen"
-                // Added w-screen to make hover effect full width for touch targets
               >
                 {label}
               </a>
             ))}
           </nav>
-          {/* Mobile Menu Close Button */}
           <button
-              onClick={() => closeMenu(false)} // False: restore scroll position if closed manually
-              className="absolute top-4 right-4 p-2 text-3xl font-mono uppercase hover:bg-foreground hover:text-background"
+              onClick={() => closeMenu(false)} 
+              className="brutalist-border absolute top-4 right-4 p-2 text-3xl font-mono uppercase hover:bg-foreground hover:text-background transition-colors duration-100"
               aria-label="Close menu"
           >
               X
@@ -284,9 +263,10 @@ const Navigation = () => {
 
 export default Navigation;
 
+// CSS class for body when mobile menu is open.
 // Add to your globals.css or a relevant CSS file if not using Tailwind JIT for body classes:
 /*
 .menu-open-brutalist {
-  overflow: hidden !important; // Prevents scrolling of the body when menu is open
+  overflow: hidden !important; 
 }
 */

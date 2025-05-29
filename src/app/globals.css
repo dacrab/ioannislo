@@ -75,7 +75,7 @@ BASE STYLES
 
   a:hover {
     color: var(--background); /* Invert colors on hover */
-    background-color: var(--foreground);
+    background-color: var(--accent); /* Use accent color for background */
   }
 
   ::selection {
@@ -108,9 +108,9 @@ section {
 }
 
 .section-divider {
-  height: 3px;
+  height: 5px; /* Increased height */
   background-color: var(--color-foreground);
-  opacity: 0.1;
+  opacity: 0.2; /* Increased opacity */
   margin: 0;
 }
 
@@ -258,12 +258,13 @@ COMPONENTS
   text-transform: uppercase;
   line-height: 0.9;
   letter-spacing: -0.02em;
+  text-shadow: 1px 1px 0px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
 .brutalist-subheading {
   font-family: var(--font-mono);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em; /* Increased letter spacing */
 }
 
 .text-outline {
@@ -578,6 +579,10 @@ GLOBAL STATE CLASSES (e.g. Menu Open/Closing)
 
 .menu-open-brutalist {
   overflow: hidden !important;
+  /* Styles from mobile body.menu-open, applicable generally when menu is open */
+  position: fixed !important; /* Added !important to ensure override if needed */
+  width: 100% !important;   /* Added !important */
+  height: 100% !important;  /* Added !important */
 }
 
 /*
@@ -694,11 +699,11 @@ MOBILE & RESPONSIVE STYLES
   }
 
   /* Mobile Menu Specific Styles */
-  body.menu-open { /* Prevent scrolling when menu is open */
+  /* body.menu-open { // This class can be removed as styles are consolidated into .menu-open-brutalist
     position: fixed;
     width: 100%;
     height: 100%;
-  }
+  } */
 
   .menu-item a,
   .social-item { /* Increase touch target sizes */

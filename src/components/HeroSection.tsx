@@ -71,29 +71,6 @@ const HeroSection = () => {
       }
     }
 
-    // Brutalist Button Hover Effects
-    if (!prefersReducedMotion()) {
-      allButtonsNodeList.forEach(button => {
-        const htmlButton = button as HTMLElement;
-        // Store original border for reset if needed, assuming it might be styled via CSS variables or specific values
-        // For this example, we'll assume a simple border style change.
-        // Ensure buttons have a transparent border initially to avoid layout shifts if adding border on hover
-        // e.g., in your CSS: .brutalist-button { border: 2px solid transparent; }
-        
-        const hoverTimeline = gsap.timeline({ paused: true });
-        hoverTimeline
-          .to(htmlButton, { x: 1, y: -1, duration: 0.05, ease: 'power1.inOut' })
-          .to(htmlButton, { x: -1, y: 1, duration: 0.05, ease: 'power1.inOut' }, ">0.02")
-          .to(htmlButton, { x: 0, y: 0, duration: 0.05, ease: 'power1.inOut' }, ">0.02")
-          // Example: quick border flash (assuming you have a CSS variable for accent color)
-          .to(htmlButton, { borderColor: 'var(--color-accent)', duration: 0.05 }, 0)
-          .to(htmlButton, { borderColor: 'var(--color-foreground)', duration: 0.05 }, ">0.05"); // Or back to original/transparent
-
-        htmlButton.addEventListener('mouseenter', () => hoverTimeline.play(0));
-        // No mouseleave needed if timeline plays through and resets, or use hoverTimeline.reverse() if preferred.
-      });
-    }
-
   }, { scope: heroRef });
 
   return (

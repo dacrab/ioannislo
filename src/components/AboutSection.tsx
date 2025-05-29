@@ -193,7 +193,7 @@ const AboutSection = () => {
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 md:gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="brutalist-border p-4 md:p-6 text-center">
+                <div key={index} className="brutalist-border bg-[var(--color-subtle-bg)] p-4 md:p-6 text-center">
                   <p 
                     ref={el => { statValueRefs.current[index] = el; }}
                     className="font-display text-4xl md:text-5xl text-accent mb-1"

@@ -13,38 +13,47 @@ const SkillsSection = lazy(() => import('@/components/SkillsSection'));
 const ContactSection = lazy(() => import('@/components/ContactSection'));
 
 export default function Home() {
-  // State
-  const [isMobile] = useState(() => isMobileDevice());
+  // State for client-side determined properties and mount status
+  const [isMobile, setIsMobile] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
-  // Refs for custom cursor
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorDotRef = useRef<HTMLDivElement>(null);
+  // Refs for custom cursor elements and animation
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+  const cursorDotRef = useRef<HTMLDivElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const cursorPositionRef = useRef({ x: 0, y: 0 });
 
-  // Handle cursor movement
+  // Effect to determine client-side properties once component has mounted
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+    setReduceMotion(prefersReducedMotion());
+    setHasMounted(true);
+  }, []);
+
+  // --- Custom Cursor Logic ---
+
+  // Callback to handle mouse movement for cursor positioning
   const handleMouseMove = useCallback((e: MouseEvent) => {
     mousePositionRef.current = { x: e.clientX, y: e.clientY };
-    
-    // For dot cursor, update position directly. Opacity handled by mouseenter/leave.
     if (cursorDotRef.current) {
+      // Dot cursor follows mouse directly
       cursorDotRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
     }
   }, []);
 
-  // Animation loop for the main cursor (non-dot)
+  // Callback for the cursor's easing animation loop
   const animateCursor = useCallback(() => {
     if (!cursorRef.current) {
-      // If cursor element is removed (e.g., during cleanup), stop the animation loop.
-      // The requestAnimationFrame should have been cancelled by cleanup, but this is a safeguard.
+      // Stop animation loop if main cursor element is not present
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       return;
     }
     
     const diffX = mousePositionRef.current.x - cursorPositionRef.current.x;
     const diffY = mousePositionRef.current.y - cursorPositionRef.current.y;
-    const easingFactor = 0.3;
+    const easingFactor = 0.3; // Adjust for desired smoothness
     
     cursorPositionRef.current.x += diffX * easingFactor;
     cursorPositionRef.current.y += diffY * easingFactor;
@@ -54,189 +63,177 @@ export default function Home() {
     animationFrameRef.current = requestAnimationFrame(animateCursor);
   }, []);
 
-  // Setup custom cursor
-  const setupCustomCursor = useCallback(() => {
-    if (isMobile || prefersReducedMotion()) return null;
+  // Effect to setup and manage the custom cursor
+  useEffect(() => {
+    // Conditions to disable custom cursor: not mounted, mobile device, or prefers reduced motion
+    if (!hasMounted || isMobile || reduceMotion) {
+      // Cleanup function (from previous effect run if any) will handle removal of elements/listeners.
+      // No setup needed if conditions aren't met.
+      return;
+    }
+
+    // Create main cursor element
+    const cursorElement = document.createElement('div');
+    cursorElement.classList.add('cursor');
+    // Basic styles (consider moving to CSS for easier maintenance)
+    Object.assign(cursorElement.style, {
+      position: 'fixed',
+      pointerEvents: 'none',
+      zIndex: '9999',
+      opacity: '0', // Start hidden, fade in on mouseenter
+    });
+    document.body.appendChild(cursorElement);
+    cursorRef.current = cursorElement;
+
+    // Create cursor dot element
+    const dotElement = document.createElement('div');
+    dotElement.classList.add('cursor-dot');
+    Object.assign(dotElement.style, {
+      position: 'fixed',
+      pointerEvents: 'none',
+      zIndex: '10000',
+      opacity: '0',
+    });
+    document.body.appendChild(dotElement);
+    cursorDotRef.current = dotElement;
     
-    const cursor = document.createElement('div');
-    cursor.classList.add('cursor');
-    cursor.style.position = 'fixed';
-    cursor.style.pointerEvents = 'none';
-    cursor.style.zIndex = '9999';
-    cursor.style.opacity = '0'; // Start hidden
-    document.body.appendChild(cursor);
-    cursorRef.current = cursor;
-    
-    const cursorDot = document.createElement('div');
-    cursorDot.classList.add('cursor-dot');
-    cursorDot.style.position = 'fixed';
-    cursorDot.style.pointerEvents = 'none';
-    cursorDot.style.zIndex = '10000';
-    cursorDot.style.opacity = '0'; // Start hidden
-    document.body.appendChild(cursorDot);
-    cursorDotRef.current = cursorDot;
-    
-    const onMouseMove = (e: MouseEvent) => handleMouseMove(e);
-    const onMouseLeave = () => {
+    // Event listener callbacks
+    const onMouseMoveListener = (e: MouseEvent) => handleMouseMove(e);
+    const onMouseLeaveListener = () => {
       if (cursorRef.current) cursorRef.current.style.opacity = '0';
       if (cursorDotRef.current) cursorDotRef.current.style.opacity = '0';
     };
-    const onMouseEnter = () => {
+    const onMouseEnterListener = () => {
       if (cursorRef.current) cursorRef.current.style.opacity = '1';
       if (cursorDotRef.current) cursorDotRef.current.style.opacity = '1';
     };
 
-    document.addEventListener('mousemove', onMouseMove, { passive: true });
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseenter', onMouseEnter);
-    
-    const handleMouseOverInteractive = (e: MouseEvent) => {
+    const handleMouseOverInteractiveListener = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (!cursorRef.current) return;
-      
+
       const isInteractive = target.closest('a, button, .interactive, .brutalist-button, .brutalist-card');
-      
+      const animProps = { duration: 0.05, ease: 'none' }; // Fast, sharp animation
+
       if (isInteractive) {
         cursorRef.current.classList.add('cursor-active');
         const isBrutalistButton = target.closest('.brutalist-button');
-        
-        const animProps = {
-          duration: 0.05,
-          ease: 'none',
-        };
-
         if (isBrutalistButton) {
-          gsap.to(cursorRef.current, {
-            ...animProps,
-            width: '50px',
-            height: '50px',
-            backgroundColor: 'var(--color-accent)',
-            opacity: 0.7,
-          });
+          gsap.to(cursorRef.current, { ...animProps, width: '50px', height: '50px', backgroundColor: 'var(--color-accent)', opacity: 0.7 });
         } else {
-          gsap.to(cursorRef.current, {
-            ...animProps,
-            width: '30px',
-            height: '30px',
-            backgroundColor: 'var(--color-foreground)',
-            opacity: 0.5,
-          });
+          gsap.to(cursorRef.current, { ...animProps, width: '30px', height: '30px', backgroundColor: 'var(--color-foreground)', opacity: 0.5 });
         }
       } else {
         cursorRef.current.classList.remove('cursor-active');
-        gsap.to(cursorRef.current, {
-          duration: 0.05,
-          ease: 'none',
-          width: '10px', // Default cursor size (ensure this matches CSS or is intended override)
-          height: '10px',
-          backgroundColor: 'var(--color-foreground)', // Default color
-          opacity: 1, // Default opacity
-        });
+        gsap.to(cursorRef.current, { ...animProps, width: '10px', height: '10px', backgroundColor: 'var(--color-foreground)', opacity: 1 });
       }
     };
-    
-    document.body.addEventListener('mouseover', handleMouseOverInteractive, { passive: true });
-    
+
+    // Add event listeners
+    document.addEventListener('mousemove', onMouseMoveListener, { passive: true });
+    document.addEventListener('mouseleave', onMouseLeaveListener);
+    document.addEventListener('mouseenter', onMouseEnterListener);
+    document.body.addEventListener('mouseover', handleMouseOverInteractiveListener, { passive: true });
+
+    // Start cursor animation loop
     animationFrameRef.current = requestAnimationFrame(animateCursor);
-    
+
+    // Cleanup function for this effect
     return () => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseleave', onMouseLeave);
-      document.removeEventListener('mouseenter', onMouseEnter);
-      document.body.removeEventListener('mouseover', handleMouseOverInteractive);
-      
+      document.removeEventListener('mousemove', onMouseMoveListener);
+      document.removeEventListener('mouseleave', onMouseLeaveListener);
+      document.removeEventListener('mouseenter', onMouseEnterListener);
+      document.body.removeEventListener('mouseover', handleMouseOverInteractiveListener);
+
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
       }
-      
+
+      // Kill GSAP tweens before removing elements
+      if (cursorRef.current) {
+        gsap.killTweensOf(cursorRef.current);
+      }
+      // No GSAP tweens on cursorDotRef.current directly, so no kill needed for it.
+
       if (cursorRef.current?.parentNode) {
         cursorRef.current.parentNode.removeChild(cursorRef.current);
-        cursorRef.current = null;
       }
+      cursorRef.current = null;
       
       if (cursorDotRef.current?.parentNode) {
         cursorDotRef.current.parentNode.removeChild(cursorDotRef.current);
-        cursorDotRef.current = null;
       }
+      cursorDotRef.current = null;
     };
-  }, [animateCursor, handleMouseMove, isMobile]);
+  }, [hasMounted, isMobile, reduceMotion, handleMouseMove, animateCursor]);
 
-  // Main effect for page initialization, loading animation, and cursor setup
+
+  // --- Page Load and Scroll Animations Logic ---
   useEffect(() => {
-    setHasMounted(true);
-  }, []);
+    if (!hasMounted) return; // Wait for mount and client-side flags
 
-  useEffect(() => {
-    if (!hasMounted) return;
-
-    gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.config({
-      ignoreMobileResize: true,
-      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
+      ignoreMobileResize: true, // Performance optimization for mobile
+      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize', // Events that trigger ScrollTrigger refresh
     });
     
-    const reduceMotion = prefersReducedMotion();
-    const baseDuration = reduceMotion ? 0.01 : 0.4; // Base duration for brutalist animations
+    const baseAnimationDuration = reduceMotion ? 0.01 : 0.4; // Adjust base duration for animations
     
-    // Initial state for sections - let's make them come from the left slightly
+    // Initial state for sections (before animation)
     gsap.set('.section-content', { opacity: 0, x: -50 }); 
     
+    // Loading overlay animation
     const loadingTimeline = gsap.timeline({
       onComplete: () => {
-        document.body.style.overflow = ''; // Allow scroll once loading is done
-        setTimeout(() => ScrollTrigger.refresh(), 100); // Refresh ScrollTrigger after content is visible
+        document.body.style.overflow = ''; // Restore scrolling
+        // Refresh ScrollTrigger after a short delay to ensure layout is stable
+        setTimeout(() => ScrollTrigger.refresh(), 100); 
       },
     });
     
     loadingTimeline
-      .set('body', { overflow: 'hidden' })
+      .set('body', { overflow: 'hidden' }) // Prevent scroll during loading
       .to('.loading-overlay', {
         opacity: 0,
-        duration: reduceMotion ? 0.01 : 0.3, // Keep loading overlay animation quick
+        duration: reduceMotion ? 0.01 : 0.3,
         ease: 'power1.in',
       })
-      .set('.loading-overlay', { display: 'none' });
-      // Removed the global .section-content animation from here
+      .set('.loading-overlay', { display: 'none' }); // Hide overlay after animation
 
-    // Scroll-triggered animations for each section
-    const sections = gsap.utils.toArray('.section-content');
+    // Scroll-triggered animations for each content section
+    const sections = gsap.utils.toArray<HTMLElement>('.section-content');
     sections.forEach((section) => {
-      const tl = gsap.timeline({
+      const sectionTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: section as gsap.DOMTarget,
-          start: 'top 85%', // Trigger when 85% of the section is visible from the top
-          end: 'bottom top', // Reset when the bottom of the section leaves the top of the viewport
-          toggleActions: 'play none none none', // Play once on enter
+          trigger: section,
+          start: 'top 85%', // Trigger when section is 85% from top of viewport
+          end: 'bottom top',
+          toggleActions: 'play none none none', // Play animation once on enter
           // markers: process.env.NODE_ENV === 'development', // Uncomment for debugging
         }
       });
 
-      tl.to(section as gsap.DOMTarget, {
+      sectionTimeline.to(section, {
         opacity: 1,
         x: 0,
-        duration: baseDuration,
-        ease: 'expo.out', // Sharp ease for entry
+        duration: baseAnimationDuration,
+        ease: 'expo.out',
       });
     });
     
-    const cleanupCursor = setupCustomCursor();
-    
+    // Cleanup function for page animations
     return () => {
-      if (cleanupCursor) cleanupCursor();
-      loadingTimeline.kill();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.killTweensOf('.section-content'); // Kill any remaining tweens on sections
-      
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
+      loadingTimeline.kill(); // Kill loading animation timeline
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill()); // Kill all ScrollTriggers
+      gsap.killTweensOf('.section-content'); // Kill any ongoing tweens on sections
     };
-  }, [setupCustomCursor, hasMounted]);
+  }, [hasMounted, reduceMotion]); // Dependencies for page animations
 
+  // Component Rendering
   return (
     <>
+      {/* Loading Overlay */}
       <div className="loading-overlay fixed inset-0 bg-background z-[100] flex items-center justify-center">
         <div className="text-4xl font-['Anton'] uppercase tracking-wider">
           <span className="inline-block animate-pulse">LOADING</span>
@@ -244,9 +241,11 @@ export default function Home() {
       </div>
       
       <Navigation />
+      
       <main className="relative z-10">
+        {/* Sections with Lazy Loading and Suspense */}
         <Suspense fallback={null}>
-          <div id="home" className="section-content"> {/* Assuming HeroSection is the 'home' section */}
+          <div id="home" className="section-content">
             <HeroSection />
           </div>
         </Suspense>

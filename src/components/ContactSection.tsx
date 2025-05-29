@@ -153,7 +153,7 @@ const ContactSection = () => {
               <div className="pt-4">
                 <a 
                   href="/IOANNIS_LOUGIAKIS_CV.pdf" // Replace with your actual CV path
-                  download="YOUR_NAME_CV.pdf"      // Replace with your CV filename
+                  download="IOANNIS_LOUGIAKIS_CV.pdf"      // Replace with your CV filename
                   className="brutalist-button w-full flex items-center justify-center gap-2 group"
                 >
                   <DownloadIcon />
@@ -189,7 +189,7 @@ const ContactSection = () => {
                   target="_blank" 
                   rel="noopener noreferrer" 
                   title={social.name}
-                  className="brutalist-border p-3 hover:bg-foreground hover:text-background transition-colors duration-100 group"
+                  className="brutalist-border bg-[var(--color-subtle-bg)] p-3 hover:bg-foreground hover:text-background transition-colors duration-100 group"
                 >
                   <svg className="w-6 h-6 text-foreground group-hover:text-background transition-colors duration-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d={social.iconPath}></path>

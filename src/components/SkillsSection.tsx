@@ -156,7 +156,7 @@ const SkillsSection = () => {
                   {categorySkills.map((skill) => (
                     <div 
                       key={skill.name} 
-                      className="brutalist-border p-3 md:p-4 text-center hover:bg-foreground hover:text-background transition-colors duration-100 group skill-card-item"
+                      className="brutalist-border bg-[var(--color-subtle-bg)] p-3 md:p-4 text-center hover:bg-foreground hover:text-background transition-colors duration-100 group skill-card-item"
                     >
                       <IconsModule 
                         name={skill.iconName} 
@@ -189,7 +189,7 @@ const SkillsSection = () => {
               <div 
                 key={tech.name} 
                 title={tech.name}
-                className="brutalist-border aspect-square flex flex-col items-center justify-center p-2 hover:bg-foreground hover:text-background transition-colors duration-100 group skill-card-item"
+                className="brutalist-border bg-[var(--color-subtle-bg)] aspect-square flex flex-col items-center justify-center p-2 hover:bg-foreground hover:text-background transition-colors duration-100 group skill-card-item"
               >
                 <IconsModule 
                   name={tech.iconName} 

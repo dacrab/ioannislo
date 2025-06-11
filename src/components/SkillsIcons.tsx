@@ -42,11 +42,24 @@ const SkillsIcons: React.FC<IconProps> = ({ name, className = '' }) => {
   const IconComponent = iconMap[name];
   
   if (!IconComponent) {
-    // Fallback for missing icons
-    return <span className={className}>•</span>;
+    // Enhanced brutalist fallback
+    return (
+      <div className={`relative inline-block ${className}`}>
+        <span className="absolute top-0 left-0 transform -translate-x-[2px] -translate-y-[2px] text-accent">•</span>
+        <span className="absolute top-0 left-0 transform translate-x-[2px] translate-y-[2px] text-foreground opacity-75">•</span>
+        <span className="relative">•</span>
+      </div>
+    );
   }
   
-  return <IconComponent className={className} />;
+  return (
+    <div className="relative inline-block group">
+      <IconComponent className={`${className} relative z-10 transform transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3`} />
+      {/* Glitch effect layers */}
+      <IconComponent className={`${className} absolute inset-0 text-accent opacity-75 transform translate-x-[2px] translate-y-[2px] group-hover:translate-x-[4px] group-hover:translate-y-[4px] transition-transform duration-200`} />
+      <IconComponent className={`${className} absolute inset-0 text-foreground opacity-50 transform -translate-x-[2px] -translate-y-[2px] group-hover:-translate-x-[4px] group-hover:-translate-y-[4px] transition-transform duration-200`} />
+    </div>
+  );
 };
 
 export default SkillsIcons; 

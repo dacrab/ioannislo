@@ -16,6 +16,7 @@ VARIABLES
   --border: var(--foreground); /* Black borders */
   --subtle-bg: #eeeeee; /* Very light grey for subtle backgrounds */
   --vh: 1vh; /* Custom viewport height variable for mobile */
+  --glitch-offset: 2px;
 }
 
 /* Theme Variables (used by components, adapt to light/dark mode) */
@@ -108,10 +109,16 @@ section {
 }
 
 .section-divider {
-  height: 5px; /* Increased height */
-  background-color: var(--color-foreground);
-  opacity: 0.2; /* Increased opacity */
-  margin: 0;
+  height: 10px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-foreground),
+    var(--color-foreground) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  margin: 2rem 0;
+  opacity: 0.15;
 }
 
 /* Grid layout */
@@ -143,45 +150,37 @@ COMPONENTS
 .brutalist-button {
   background-color: var(--color-foreground);
   color: var(--color-background);
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 2rem;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.125rem;
   text-transform: uppercase;
-  border: 2px solid var(--color-foreground);
+  border: 3px solid var(--color-foreground);
   position: relative;
   overflow: hidden;
-  display: inline-block;
-  text-decoration: none; /* Ensure buttons don't get underlines from global 'a' style */
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
 }
 
 .brutalist-button:hover {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
-  color: var(--color-background);
-  transform: translate(-2px, -2px);
-  box-shadow: 2px 2px 0 var(--color-foreground);
-  text-decoration: none;
+  transform: scale(1.05) skew(-2deg);
 }
 
-.brutalist-button:active {
-  transform: translate(0px, 0px);
-  box-shadow: 0px 0px 0 var(--color-foreground);
+.brutalist-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.3s;
 }
 
-.brutalist-button--secondary {
-  background-color: transparent;
-  color: var(--color-foreground);
-  border-color: var(--color-foreground);
-  text-decoration: none;
-}
-
-.brutalist-button--secondary:hover {
-  background-color: var(--color-accent);
-  color: var(--color-background);
-  border-color: var(--color-accent);
-  transform: translate(-2px, -2px);
-  box-shadow: 2px 2px 0 var(--color-foreground);
-  text-decoration: none;
+.brutalist-button:hover::before {
+  transform: translateX(100%);
 }
 
 /* Brutalist Card */
@@ -190,11 +189,7 @@ COMPONENTS
   border: 2px solid var(--color-foreground);
   padding: 1.5rem;
   position: relative;
-}
-
-.brutalist-card:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 3px 3px 0 var(--color-foreground);
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .brutalist-card::before {
@@ -206,17 +201,22 @@ COMPONENTS
   height: 100%;
   background: repeating-linear-gradient(
     45deg,
-    var(--color-subtle-bg),
-    var(--color-subtle-bg) 5px,
-    transparent 5px,
-    transparent 10px
+    var(--accent),
+    var(--accent) 2px,
+    transparent 2px,
+    transparent 8px
   );
   z-index: -1;
-  transition: transform 0.3s ease;
+  opacity: 0.1;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.brutalist-card:hover {
+  transform: translate(-5px, -5px);
 }
 
 .brutalist-card:hover::before {
-  transform: translate(5px, 5px);
+  transform: translate(10px, 10px);
 }
 
 .brutalist-card-header {
@@ -256,9 +256,11 @@ COMPONENTS
 .brutalist-heading {
   font-family: var(--font-display);
   text-transform: uppercase;
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  text-shadow: 1px 1px 0px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 8vw, 8rem);
+  transform-origin: left center;
+  text-shadow: 2px 2px 0px var(--accent);
 }
 
 .brutalist-subheading {
@@ -270,6 +272,34 @@ COMPONENTS
 .text-outline {
   -webkit-text-stroke: 1px var(--color-foreground);
   color: transparent;
+}
+
+.text-glitch {
+  position: relative;
+  animation: textGlitch 3s infinite linear alternate-reverse;
+}
+
+.text-glitch::before,
+.text-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip: rect(0, 900px, 0, 0);
+}
+
+.text-glitch::before {
+  left: var(--glitch-offset);
+  text-shadow: -1px 0 red;
+  animation: glitchEffect 3s infinite linear alternate-reverse;
+}
+
+.text-glitch::after {
+  left: calc(var(--glitch-offset) * -1);
+  text-shadow: 1px 0 blue;
+  animation: glitchEffect 2s infinite linear alternate-reverse;
 }
 
 /* Menu Styles */
@@ -618,8 +648,8 @@ MOBILE & RESPONSIVE STYLES
   }
 
   .brutalist-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
   }
 
   .brutalist-card {
@@ -633,8 +663,7 @@ MOBILE & RESPONSIVE STYLES
 
   /* Typography Adjustments */
   .brutalist-heading {
-    font-size: 2.5rem !important;
-    line-height: 1 !important;
+    font-size: clamp(2rem, 10vw, 4rem);
   }
 
   /* Viewport Height Fixes */
@@ -736,4 +765,121 @@ MOBILE & RESPONSIVE STYLES
   header {
     background-color: var(--background);
   }
+
+  .section-divider {
+    height: 6px;
+  }
+}
+
+/* Raw Scroll Animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px) skew(-5deg);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0) skew(0);
+}
+
+/* Enhanced Scroll Progress */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  z-index: 1000;
+}
+
+/* Raw Image Effects */
+.image-raw {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+}
+
+.image-raw::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.image-raw:hover::after {
+  opacity: 0.3;
+}
+
+@keyframes glitchEffect {
+  0% {
+    clip: rect(20px, 9999px, 21px, 0);
+  }
+  20% {
+    clip: rect(42px, 9999px, 44px, 0);
+  }
+  40% {
+    clip: rect(56px, 9999px, 58px, 0);
+  }
+  60% {
+    clip: rect(12px, 9999px, 14px, 0);
+  }
+  80% {
+    clip: rect(87px, 9999px, 88px, 0);
+  }
+  100% {
+    clip: rect(32px, 9999px, 34px, 0);
+  }
+}
+
+@keyframes textGlitch {
+  0% {
+    transform: skew(0deg);
+  }
+  20% {
+    transform: skew(-2deg);
+  }
+  40% {
+    transform: skew(2deg);
+  }
+  60% {
+    transform: skew(-1deg);
+  }
+  80% {
+    transform: skew(1deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+/* Intro Animation */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-background);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.intro-text {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 15vw, 12rem);
+  text-transform: uppercase;
+  line-height: 0.8;
+  opacity: 0;
+  transform: translateY(50px);
 }

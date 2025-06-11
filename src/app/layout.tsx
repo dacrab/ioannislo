@@ -25,10 +25,21 @@ const anton = Anton({
 export const metadata: Metadata = {
   title: "BRUTALIST·2025 | Modern Portfolio",
   description: "A raw, bold, and modern brutalist portfolio showcasing creative work with cutting-edge animations",
-  keywords: "brutalist, portfolio, design, creative, web development, animation, UI/UX",
+  keywords: [
+    "brutalist",
+    "portfolio",
+    "design",
+    "creative",
+    "web development",
+    "animation",
+    "UI/UX",
+    "raw design",
+    "bold typography",
+    "modern brutalism"
+  ],
   authors: [{ name: "Ioannis Lougiakis" }],
   creator: "Ioannis Lougiakis",
-  metadataBase: new URL('https://example.com'), // Replace with your actual domain
+  metadataBase: new URL('https://example.com'),
   openGraph: {
     title: "BRUTALIST·2025 | Modern Portfolio",
     description: "A raw, bold, and modern brutalist portfolio showcasing creative work with cutting-edge animations",
@@ -36,19 +47,34 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: '/og-image.jpg', // Create and add an OG image
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'BRUTALIST·2025 Portfolio Preview',
       },
     ],
+    siteName: "BRUTALIST·2025",
   },
   twitter: {
     card: "summary_large_image",
     title: "BRUTALIST·2025 | Modern Portfolio",
     description: "A raw, bold, and modern brutalist portfolio showcasing creative work with cutting-edge animations",
-    images: ['/twitter-image.jpg'], // Create and add a Twitter image
+    images: ['/twitter-image.jpg'],
+    creator: "@yourtwitterhandle",
+    site: "@yourtwitterhandle",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  category: "Portfolio",
   formatDetection: {
     telephone: false,
     date: false,
@@ -56,6 +82,12 @@ export const metadata: Metadata = {
     address: false,
   },
   applicationName: 'BRUTALIST·2025',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    title: "BRUTALIST·2025",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
@@ -78,7 +110,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${spaceMono.variable} ${anton.variable}`} suppressHydrationWarning>
+    <html 
+      lang="en" 
+      className={`scroll-smooth ${spaceMono.variable} ${anton.variable}`} 
+      suppressHydrationWarning
+    >
       <ClientLayout spaceMono={spaceMono.variable} anton={anton.variable}>
         {children}
       </ClientLayout>

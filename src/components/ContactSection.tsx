@@ -45,6 +45,7 @@ const ContactSection = () => {
     const titleDot = titleDotRef.current;
     const revealItems: Element[] = gsap.utils.toArray(sectionRef.current?.querySelectorAll('.brutalist-reveal-item') || []);
     const innerRevealItems: Element[] = gsap.utils.toArray(sectionRef.current?.querySelectorAll('.contact-inner-reveal') || []);
+    const socialIcons: Element[] = gsap.utils.toArray(sectionRef.current?.querySelectorAll('.social-icon') || []);
 
     const reduceMotion = prefersReducedMotion();
     const baseDuration = reduceMotion ? 0.01 : 0.3;
@@ -52,59 +53,97 @@ const ContactSection = () => {
 
     // Animate main title "CONTACT."
     if (titleText && titleDot) {
-      gsap.set(titleText, { opacity: 0, x: -30 });
-      gsap.set(titleDot, { opacity: 0, scale: 0 });
+      gsap.set(titleText, { opacity: 0, x: -30, skewX: 20 });
+      gsap.set(titleDot, { opacity: 0, scale: 0, rotation: 180 });
 
-      // Ensure this trigger is distinct if title is inside a .brutalist-reveal-item
       gsap.timeline({ 
         scrollTrigger: {
-          trigger: titleRef.current, 
-          start: 'top 85%', 
+          trigger: titleRef.current,
+          start: 'top 85%',
           toggleActions: 'play none none none',
         }
       })
-      .to(titleText, { opacity: 1, x: 0, duration: baseDuration * 1.5, ease: brutalEase })
-      .to(titleDot, { opacity: 1, scale: 1, duration: baseDuration, ease: brutalEase }, "-=0.1");
+      .to(titleText, { 
+        opacity: 1, 
+        x: 0, 
+        skewX: 0,
+        duration: baseDuration * 1.5, 
+        ease: brutalEase 
+      })
+      .to(titleDot, { 
+        opacity: 1, 
+        scale: 1, 
+        rotation: 0,
+        duration: baseDuration, 
+        ease: brutalEase 
+      }, "-=0.1");
     }
 
-    // Stagger animation for main .brutalist-reveal-item blocks (e.g., main content area, footer)
+    // Stagger animation for main .brutalist-reveal-item blocks
     if (revealItems.length > 0) {
-      gsap.set(revealItems, { opacity: 0, y: 25 });
+      gsap.set(revealItems, { opacity: 0, y: 25, skewY: 5 });
       ScrollTrigger.batch(revealItems, {
         start: 'top 90%',
         onEnter: batch => 
           gsap.to(batch, {
             opacity: 1,
             y: 0,
+            skewY: 0,
             duration: baseDuration * 1.2,
             ease: brutalEase,
             stagger: 0.1,
             overwrite: true
           }),
         onLeaveBack: batch => 
-          gsap.set(batch, { opacity: 0, y: 25, overwrite: true }), 
+          gsap.set(batch, { opacity: 0, y: 25, skewY: 5, overwrite: true }), 
       });
     }
 
-    // Stagger animation for inner elements within the main contact content block
+    // Stagger animation for inner elements
     if (innerRevealItems.length > 0) {
-        gsap.set(innerRevealItems, { opacity: 0, scale: 0.9 });
-        ScrollTrigger.batch(innerRevealItems, {
-            start: 'top 90%', // Start when the top of an inner item is 90% from top of viewport
-            onEnter: batch => {
-                gsap.to(batch, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: baseDuration,
-                    ease: brutalEase,
-                    stagger: 0.1,
-                    overwrite: true
-                });
+      gsap.set(innerRevealItems, { opacity: 0, scale: 0.9, rotation: -3 });
+      ScrollTrigger.batch(innerRevealItems, {
+        start: 'top 90%',
+        onEnter: batch => {
+          gsap.to(batch, {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: baseDuration,
+            ease: brutalEase,
+            stagger: 0.1,
+            overwrite: true
+          });
+        },
+        onLeaveBack: batch => {
+          gsap.set(batch, { opacity: 0, scale: 0.9, rotation: -3, overwrite: true });
+        },
+      });
+    }
+
+    // Social icons animation
+    if (socialIcons.length > 0) {
+      gsap.set(socialIcons, { opacity: 0, scale: 0, rotation: -180 });
+      ScrollTrigger.batch(socialIcons, {
+        start: 'top 95%',
+        onEnter: batch => {
+          gsap.to(batch, {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: baseDuration,
+            ease: brutalEase,
+            stagger: {
+              amount: 0.5,
+              from: "random"
             },
-            onLeaveBack: batch => {
-                gsap.set(batch, { opacity: 0, scale: 0.9, overwrite: true });
-            },
-        });
+            overwrite: true
+          });
+        },
+        onLeaveBack: batch => {
+          gsap.set(batch, { opacity: 0, scale: 0, rotation: -180, overwrite: true });
+        },
+      });
     }
 
   }, { scope: sectionRef });
@@ -128,23 +167,35 @@ const ContactSection = () => {
           ref={titleRef}
           className="font-display text-4xl sm:text-5xl md:text-6xl uppercase mb-10 md:mb-16 tracking-tight text-center"
         >
-          <span ref={titleTextRef}>CONTACT</span><span ref={titleDotRef} className="text-accent">.</span>
+          <span ref={titleTextRef} className="inline-block">CONTACT</span>
+          <span ref={titleDotRef} className="text-accent inline-block">.</span>
         </h2>
         
         <div className="max-w-3xl mx-auto brutalist-reveal-item">
-          <div className="brutalist-card p-6 md:p-8 mb-10 md:mb-12 contact-inner-reveal">
-            <h3 className="font-display text-2xl md:text-3xl uppercase text-accent mb-6 text-center sm:text-left">
+          <div className="brutalist-card p-6 md:p-8 mb-10 md:mb-12 contact-inner-reveal relative overflow-hidden group">
+            <span className="absolute inset-0 bg-accent/10 transform -skew-x-12 translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0"></span>
+            <h3 className="font-display text-2xl md:text-3xl uppercase text-accent mb-6 text-center sm:text-left relative z-10">
               Get In Touch
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-6 relative z-10">
               {contactItems.map(({ type, value, href, Icon }) => (
-                <div key={type} className="flex flex-col sm:flex-row items-start sm:items-center">
+                <div key={type} className="flex flex-col sm:flex-row items-start sm:items-center group/item">
                   <div className="flex items-center mb-2 sm:mb-0 sm:mr-4">
-                    <Icon />
+                    <div className="relative">
+                      <Icon />
+                      <div className="absolute inset-0 text-accent opacity-75 transform translate-x-[1px] translate-y-[1px] group-hover/item:translate-x-[2px] group-hover/item:translate-y-[2px] transition-transform duration-200">
+                        <Icon />
+                      </div>
+                    </div>
                     <p className="font-mono text-sm uppercase ml-3 text-muted">{type}</p>
                   </div>
                   {href ? (
-                    <a href={href} className="font-mono text-base md:text-lg break-all">{value}</a>
+                    <a 
+                      href={href} 
+                      className="font-mono text-base md:text-lg break-all hover:text-accent transition-colors duration-200 relative group-hover/item:translate-x-1 transform transition-transform"
+                    >
+                      {value}
+                    </a>
                   ) : (
                     <p className="font-mono text-base md:text-lg break-all">{value}</p>
                   )}
@@ -152,28 +203,34 @@ const ContactSection = () => {
               ))}
               <div className="pt-4">
                 <a 
-                  href="/IOANNIS_LOUGIAKIS_CV.pdf" // Replace with your actual CV path
-                  download="IOANNIS_LOUGIAKIS_CV.pdf"      // Replace with your CV filename
-                  className="brutalist-button w-full flex items-center justify-center gap-2 group"
+                  href="/IOANNIS_LOUGIAKIS_CV.pdf"
+                  download="IOANNIS_LOUGIAKIS_CV.pdf"
+                  className="brutalist-button w-full flex items-center justify-center gap-2 group relative overflow-hidden"
                 >
+                  <span className="absolute inset-0 bg-accent/20 transform -skew-x-12 translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
                   <DownloadIcon />
-                  DOWNLOAD CV
+                  <span className="relative z-10">DOWNLOAD CV</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="brutalist-card p-6 md:p-8 mb-10 md:mb-12 text-center contact-inner-reveal">
-            <h3 className="font-display text-2xl md:text-3xl uppercase text-accent mb-6">
+          <div className="brutalist-card p-6 md:p-8 mb-10 md:mb-12 text-center contact-inner-reveal relative overflow-hidden group">
+            <span className="absolute inset-0 bg-accent/10 transform skew-x-12 -translate-x-full transition-transform duration-500 ease-out group-hover:translate-x-0"></span>
+            <h3 className="font-display text-2xl md:text-3xl uppercase text-accent mb-6 relative z-10">
               Let&apos;s Work Together
             </h3>
-            <p className="font-mono text-base md:text-lg mb-6 max-w-xl mx-auto">
+            <p className="font-mono text-base md:text-lg mb-6 max-w-xl mx-auto relative z-10">
               I&apos;m currently available for freelance work and collaborations. 
               If you have a project that needs creative solutions, let&apos;s talk!
             </p>
-            <a href="mailto:hello@example.com" className="brutalist-button inline-flex items-center gap-2 group">
+            <a 
+              href="mailto:hello@example.com" 
+              className="brutalist-button inline-flex items-center gap-2 group relative overflow-hidden"
+            >
+              <span className="absolute inset-0 bg-accent/20 transform skew-x-12 -translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
               <EmailIcon />
-              SAY HELLO
+              <span className="relative z-10">SAY HELLO</span>
             </a>
           </div>
           
@@ -189,9 +246,10 @@ const ContactSection = () => {
                   target="_blank" 
                   rel="noopener noreferrer" 
                   title={social.name}
-                  className="brutalist-border bg-[var(--color-subtle-bg)] p-3 hover:bg-foreground hover:text-background transition-colors duration-100 group"
+                  className="brutalist-border bg-[var(--color-subtle-bg)] p-3 hover:bg-foreground hover:text-background transition-colors duration-100 group social-icon relative overflow-hidden transform hover:scale-110 hover:rotate-3 hover:shadow-brutal transition-all"
                 >
-                  <svg className="w-6 h-6 text-foreground group-hover:text-background transition-colors duration-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <span className="absolute inset-0 bg-accent/20 transform -skew-x-12 translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
+                  <svg className="w-6 h-6 text-foreground group-hover:text-background transition-colors duration-100 relative z-10" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d={social.iconPath}></path>
                   </svg>
                 </a>
@@ -201,13 +259,30 @@ const ContactSection = () => {
         </div>
       </div>
       
-      <footer className="mt-16 md:mt-24 pt-8 md:pt-12 border-t-2 border-foreground brutalist-reveal-item">
+      <footer className="mt-16 md:mt-24 pt-8 md:pt-12 border-t-4 border-foreground brutalist-reveal-item">
         <div className="container mx-auto px-4 text-center sm:text-left">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="font-mono text-lg font-bold uppercase">
-              BRUTALIST<span className="text-accent">·</span>PORTFOLIO
+            <p className="font-mono text-lg font-bold uppercase relative inline-block group">
+              BRUTALIST<span className="text-accent relative inline-block group-hover:rotate-180 transition-transform duration-300">·</span>PORTFOLIO
             </p>
-            <p className="font-mono text-xs text-muted">&copy; {new Date().getFullYear()} ALL RIGHTS RESERVED.</p>
+            <div className="flex flex-col items-end gap-1">
+              <p className="font-mono text-xs text-muted">&copy; {new Date().getFullYear()} ALL RIGHTS RESERVED.</p>
+              <div className="group relative">
+                <p className="font-mono text-[10px] text-muted/60 tracking-tight">
+                  Designed & Developed by{' '}
+                  <a 
+                    href="https://dacrab.github.io" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-block hover:text-accent transition-colors duration-200"
+                  >
+                    KILLCRB
+                  </a>
+                </p>
+                <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-accent transform scale-0 group-hover:scale-100 transition-transform duration-200"></span>
+                <span className="absolute -right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-accent transform scale-0 group-hover:scale-100 transition-transform duration-200 rotate-45"></span>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

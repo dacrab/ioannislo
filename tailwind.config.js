@@ -16,6 +16,15 @@ module.exports = {
         muted: 'var(--color-muted)',
         border: 'var(--color-border)',
       },
+      keyframes: {
+        scrollDown: {
+          '0%': { transform: 'translateY(0%)' },
+          '100%': { transform: 'translateY(200%)' }
+        }
+      },
+      animation: {
+        'scrollDown': 'scrollDown 2s ease-in-out infinite',
+      },
     },
   },
   plugins: [],

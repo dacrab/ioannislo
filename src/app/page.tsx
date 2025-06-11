@@ -13,24 +13,83 @@ const SkillsSection = lazy(() => import('@/components/SkillsSection'));
 const ContactSection = lazy(() => import('@/components/ContactSection'));
 
 export default function Home() {
-  // State for client-side determined properties and mount status
   const [isMobile, setIsMobile] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Refs for custom cursor elements and animation
+  // Refs for DOM elements and animation
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const cursorDotRef = useRef<HTMLDivElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const mousePositionRef = useRef({ x: 0, y: 0 });
   const cursorPositionRef = useRef({ x: 0, y: 0 });
+  const introOverlayRef = useRef<HTMLDivElement>(null);
+  const introTextRef = useRef<HTMLDivElement>(null);
+  const scrollProgressRef = useRef<HTMLDivElement>(null);
 
   // Effect to determine client-side properties once component has mounted
   useEffect(() => {
     setIsMobile(isMobileDevice());
     setReduceMotion(prefersReducedMotion());
     setHasMounted(true);
-  }, []);
+
+    // Intro Animation
+    if (!reduceMotion) {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setIsLoading(false);
+          document.body.style.overflow = '';
+        }
+      });
+
+      document.body.style.overflow = 'hidden';
+
+      if (introTextRef.current && introOverlayRef.current) {
+        tl.set(introTextRef.current, { opacity: 0, y: 50 })
+          .to(introTextRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power4.out"
+          })
+          .to(introTextRef.current, {
+            opacity: 0,
+            y: -50,
+            duration: 0.5,
+            ease: "power4.in"
+          }, "+=0.5")
+          .to(introOverlayRef.current, {
+            clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
+            duration: 1,
+            ease: "power4.inOut"
+          }, "-=0.3");
+      }
+    } else {
+      setIsLoading(false);
+    }
+  }, [reduceMotion]);
+
+  // Scroll Progress Animation
+  useEffect(() => {
+    if (!hasMounted || reduceMotion) return;
+
+    const updateScrollProgress = () => {
+      if (!scrollProgressRef.current) return;
+      
+      const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / windowHeight) * 100;
+      
+      gsap.to(scrollProgressRef.current, {
+        scaleX: progress / 100,
+        duration: 0.1,
+        ease: "none"
+      });
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, [hasMounted, reduceMotion]);
 
   // --- Custom Cursor Logic ---
 
@@ -233,41 +292,68 @@ export default function Home() {
   // Component Rendering
   return (
     <>
-      {/* Loading Overlay */}
-      <div className="loading-overlay fixed inset-0 bg-background z-[100] flex items-center justify-center">
-        <div className="text-4xl font-['Anton'] uppercase tracking-wider">
-          <span className="inline-block animate-pulse">LOADING</span>
+      {/* Intro Overlay */}
+      <div 
+        ref={introOverlayRef}
+        className="intro-overlay"
+        style={{ 
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+          background: "var(--color-background)" 
+        }}
+      >
+        <div 
+          ref={introTextRef}
+          className="intro-text"
+        >
+          BRUTALIST·2025
         </div>
       </div>
-      
-      <Navigation />
-      
-      <main className="relative z-10">
-        {/* Sections with Lazy Loading and Suspense */}
-        <Suspense fallback={null}>
-          <div id="home" className="section-content">
-            <HeroSection />
+
+      {/* Scroll Progress Indicator */}
+      <div 
+        ref={scrollProgressRef}
+        className="scroll-progress"
+        style={{ transform: 'scaleX(0)' }}
+      />
+
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="fixed inset-0 bg-background z-50 flex items-center justify-center">
+          <div className="text-4xl font-display uppercase tracking-wider animate-pulse">
+            LOADING
           </div>
-        </Suspense>
-        <div className="section-divider"></div>
-        <Suspense fallback={null}>
-          <div id="about" className="section-content">
-            <AboutSection />
-          </div>
-        </Suspense>
-        <div className="section-divider"></div>
-        <Suspense fallback={null}>
-          <div id="skills" className="section-content">
-            <SkillsSection />
-          </div>
-        </Suspense>
-        <div className="section-divider"></div>
-        <Suspense fallback={null}>
-          <div id="contact" className="section-content">
-            <ContactSection />
-          </div>
-        </Suspense>
-      </main>
+        </div>
+      ) : (
+        <>
+          <Navigation />
+          
+          <main className="relative z-10">
+            <Suspense fallback={null}>
+              <div id="home" className="section-content">
+                <HeroSection />
+              </div>
+            </Suspense>
+            <div className="section-divider"></div>
+            <Suspense fallback={null}>
+              <div id="about" className="section-content">
+                <AboutSection />
+              </div>
+            </Suspense>
+            <div className="section-divider"></div>
+            <Suspense fallback={null}>
+              <div id="skills" className="section-content">
+                <SkillsSection />
+              </div>
+            </Suspense>
+            <div className="section-divider"></div>
+            <Suspense fallback={null}>
+              <div id="contact" className="section-content">
+                <ContactSection />
+              </div>
+            </Suspense>
+          </main>
+        </>
+      )}
     </>
   );
 }

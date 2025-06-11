@@ -89,20 +89,41 @@ const Navigation = () => {
     if (!isMenuOpen || !isMobile || !menuOverlayRef.current) return;
 
     const menuItems = menuOverlayRef.current.querySelectorAll<HTMLElement>('.menu-item-brutalist');
+    const menuBg = menuOverlayRef.current.querySelector<HTMLElement>('.menu-bg');
     
     if (prefersReducedMotion()) {
-      gsap.set(menuItems, { opacity: 1, x: 0 }); 
-    } else {
-      gsap.set(menuItems, { opacity: 0, x: -20 }); 
-      gsap.to(menuItems, { 
-        opacity: 1, 
-        x: 0,
-        stagger: 0.05, 
-        duration: 0.2,
-        ease: 'power1.out',
-      });
+      gsap.set([menuBg, menuItems], { opacity: 1, x: 0 }); 
+      return;
     }
-  }, [isMenuOpen, isMobile]); 
+
+    // Animate menu background
+    gsap.fromTo(menuBg, 
+      { clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' },
+      { 
+        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+        duration: 0.4,
+        ease: 'power4.inOut'
+      }
+    );
+
+    // Animate menu items with stagger
+    gsap.fromTo(menuItems,
+      { 
+        opacity: 0,
+        x: -50,
+        skewX: -10
+      },
+      {
+        opacity: 1,
+        x: 0,
+        skewX: 0,
+        stagger: 0.1,
+        duration: 0.4,
+        ease: 'power4.out',
+        delay: 0.2
+      }
+    );
+  }, [isMenuOpen, isMobile]);
 
   // Callback: Close the mobile menu
   const closeMenu = useCallback((preserveScrollPosition = false) => {
@@ -180,16 +201,19 @@ const Navigation = () => {
       {/* Fixed Header */}
       <header 
         ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-foreground transition-all duration-200 ease-out px-4 py-3"
+        className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b-[3px] border-foreground transition-all duration-200 ease-out px-4 py-3"
       >
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo */}
           <a 
             href="#home"
             onClick={(e) => scrollToSection(e, 'home')}
-            className="text-xl md:text-2xl font-display uppercase tracking-tight hover:text-accent transition-colors duration-100 flex items-center"
+            className="text-xl md:text-2xl font-display uppercase tracking-tight hover:text-accent transition-colors duration-100 flex items-center relative overflow-hidden group"
           >
-            {LOGO_TEXT}
+            <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-200">
+              {LOGO_TEXT}
+            </span>
+            <div className="absolute inset-0 bg-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out" />
           </a>
           
           {/* Desktop Navigation */}
@@ -199,12 +223,21 @@ const Navigation = () => {
                 key={id}
                 href={`#${id}`}
                 onClick={(e) => scrollToSection(e, id)}
-                className={`nav-link-brutalist px-3 py-2 uppercase font-mono text-sm hover:bg-foreground hover:text-background ${
-                  activeSection === id ? 'bg-foreground text-background' : 'text-foreground'
-                } transition-colors duration-100`}
+                className={`nav-link-brutalist px-4 py-2 uppercase font-mono text-sm relative overflow-hidden group ${
+                  activeSection === id ? 'text-background' : 'text-foreground'
+                }`}
                 data-section={id}
               >
-                {label}
+                <span className="relative z-10 transition-colors duration-200">
+                  {label}
+                </span>
+                <div 
+                  className={`absolute inset-0 transform transition-transform duration-200 ${
+                    activeSection === id 
+                      ? 'translate-x-0 bg-foreground' 
+                      : '-translate-x-full bg-accent group-hover:translate-x-0'
+                  }`} 
+                />
               </a>
             ))}
           </nav>
@@ -214,15 +247,21 @@ const Navigation = () => {
             <button
               ref={menuButtonRef}
               onClick={toggleMenu}
-              className="p-2 focus:outline-none"
+              className={`p-2 focus:outline-none transition-transform duration-200 ${isMenuOpen ? 'rotate-90' : ''}`}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu-overlay"
             >
               <div className="space-y-1.5">
-                <span className="block w-6 h-0.5 bg-foreground"></span>
-                <span className="block w-6 h-0.5 bg-foreground"></span>
-                <span className="block w-6 h-0.5 bg-foreground"></span>
+                <span className={`block w-6 h-0.5 bg-foreground transition-transform duration-200 ${
+                  isMenuOpen ? 'rotate-45 translate-y-2' : ''
+                }`} />
+                <span className={`block w-6 h-0.5 bg-foreground transition-opacity duration-200 ${
+                  isMenuOpen ? 'opacity-0' : ''
+                }`} />
+                <span className={`block w-6 h-0.5 bg-foreground transition-transform duration-200 ${
+                  isMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`} />
               </div>
             </button>
           )}
@@ -232,29 +271,32 @@ const Navigation = () => {
       {/* Mobile Menu Overlay */}
       {isMobile && (
         <div
-          id="mobile-menu-overlay"
           ref={menuOverlayRef}
-          className="fixed inset-0 z-40 bg-background flex-col items-center justify-center hidden"
+          className={`fixed inset-0 z-40 ${isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
         >
-          <nav className="flex flex-col items-center text-center">
-            {NAV_ITEMS.map(({ id, label }) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                onClick={(e) => scrollToSection(e, id)}
-                className="menu-item-brutalist block py-4 text-2xl uppercase font-mono hover:bg-foreground hover:text-background w-screen"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-          <button
-              onClick={() => closeMenu(false)} 
-              className="brutalist-border absolute top-4 right-4 p-2 text-3xl font-mono uppercase hover:bg-foreground hover:text-background transition-colors duration-100"
-              aria-label="Close menu"
-          >
-              X
-          </button>
+          {/* Menu Background */}
+          <div className="menu-bg absolute inset-0 bg-background border-l-[3px] border-foreground transform origin-right" />
+          
+          {/* Menu Content */}
+          <div className="relative z-10 h-full flex flex-col justify-center items-center p-8">
+            <nav className="space-y-6">
+              {NAV_ITEMS.map(({ id, label }) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  onClick={(e) => scrollToSection(e, id)}
+                  className={`menu-item-brutalist block text-4xl md:text-5xl font-display uppercase tracking-tight transition-colors duration-200 relative group ${
+                    activeSection === id ? 'text-accent' : 'text-foreground hover:text-accent'
+                  }`}
+                >
+                  <span className="relative z-10">
+                    {label}
+                  </span>
+                  <div className="absolute left-0 bottom-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" />
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
       )}
     </>

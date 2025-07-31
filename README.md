@@ -1,5 +1,3 @@
-Here's a revamped and more visually appealing version of your README:
-
 # 🎨 Modern Brutalist Portfolio with GSAP Animations
 
 A striking and modern brutalist-style portfolio website built with **Next.js**, **TypeScript**, and brought to life with **GSAP animations**. This project embraces a clean, raw aesthetic, enhanced by powerful animations that create a memorable user experience without compromising brutalist design principles.

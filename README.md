@@ -1,63 +1,117 @@
-# 🎉 Ioannis Lougiakis - IT Wizard Extraordinaire 🧙‍♂️
+# Modern Brutalist Portfolio with GSAP Animations
 
-![GitHub repo size](https://img.shields.io/github/repo-size/dacrab/friends_portfolio) 📦
-![GitHub stars](https://img.shields.io/github/stars/dacrab/friends_portfolio?style=social) ⭐
-![GitHub forks](https://img.shields.io/github/forks/dacrab/friends_portfolio?style=social) 🍴
-![GitHub issues](https://img.shields.io/github/issues/dacrab/friends_portfolio) 🐛
-![GitHub license](https://img.shields.io/github/license/dacrab/friends_portfolio) 📜
+This project is a modern brutalist-style portfolio website built with Next.js, TypeScript, and GSAP animations. It features a clean, raw aesthetic with powerful animations that enhance the user experience without compromising the brutalist design principles.
 
-Welcome to the magical realm of Ioannis Lougiakis, where bits and bytes dance to create digital wonders! 🕺💻
+## Features
 
-## 🚀 Spellbinding Features
+- **Responsive Brutalist Design**: Raw, honest design with strong typography and geometric shapes
+- **Advanced GSAP Animations**: Smooth scrolling, text animations, SVG animations, and UI interactions
+- **Component-Based Architecture**: Modular components for easy maintenance and extension
+- **TypeScript Support**: Type-safe code for better development experience
+- **Optimized Performance**: Efficient animations and asset loading
 
-- 📱 Shape-shifting Design: Morphs to fit any screen size!
-- 🌓 Light/Dark Sorcery: Toggle between realms with a flick of your wand
-- 🔄 Butter-smooth Scrolling: Glide through sections like a majestic eagle
-- 📄 Enchanted CV: Summon Ioannis' resume with a mystical click
-- 🎨 Dancing Skills: Watch as abilities come alive before your eyes
-- 🌐 Social Media Portals: Connect across the digital dimensions
-- 📧 Telepathic Email: Copy Ioannis' email faster than you can say "Abracadabra!"
-- ♿ Accessible to All: Because magic should be inclusive
-- ⚡ Faster than Sonic: Loads quicker than you can blink
-- 🎉 UI from the Future: So sleek, it might be from 3023
+## Animation Features
 
-## 🛠️ Arcane Technologies
+### Global Animations
+- **Smooth Scrolling**: Using GSAP's ScrollSmoother for a premium scrolling experience
+- **Custom Cursor**: Animated cursor that reacts to interactive elements
+- **Magnetic Button Effects**: Buttons that respond to mouse proximity
+- **Parallax Effects**: Multi-layered parallax on decorative elements
 
-![HTML5](https://img.shields.io/badge/HTML5-The%20very%20fabric%20of%20the%20web-orange) 🕸️
-![CSS3](https://img.shields.io/badge/CSS3-Making%20websites%20prettier%20than%20a%20unicorn-blue) 🦄
-![JavaScript](https://img.shields.io/badge/JavaScript%20(ES6%2B)-Where%20the%20real%20magic%20happens-yellow) ✨
-![Font Awesome](https://img.shields.io/badge/Font%20Awesome-Icons%20so%20cool%2C%20they%20wear%20sunglasses-green) 😎
-![ScrollReveal](https://img.shields.io/badge/ScrollReveal-Making%20elements%20appear%20like%20a%20boss-lightgrey) 🎭
-![Lodash](https://img.shields.io/badge/Lodash-The%20Swiss%20Army%20knife%20of%20JavaScript-blueviolet) 🔪
+### Text Animations
+- **Character Splitting**: Text animations at the character level using SplitText
+- **Staggered Reveals**: Text appears with staggered timing for a dynamic effect
+- **Text Masking**: Creative reveals using clip-path animations
+- **Hover Effects**: Interactive text elements that respond to user interaction
 
-## 🚀 Quick Start (No Rocket Science Required)
+### SVG Animations
+- **Path Drawing**: SVG paths that draw themselves using DrawSVGPlugin
+- **SVG Morphing**: Shape transformations using MorphSVGPlugin
+- **Rotation & Bounce**: Dynamic SVG animations for visual interest
+- **Reusable SVG Component**: A flexible component for various SVG animation types
 
-1. Summon the repository: `git clone https://github.com/dacrab/friends_portfolio`
-2. Chant the sacred words (or just double-click) `index.html`
-3. Wave your wand (or mouse) over `style.css` to customize
-4. Sprinkle some extra magic dust in `main.js` if you're feeling adventurous
+### UI Interactions
+- **Skill Bar Animations**: Animated progress bars with counter effects
+- **Form Field Animations**: Interactive form fields with focus/blur animations
+- **Card Hover Effects**: 3D tilt effects on cards based on mouse position
+- **Social Icon Animations**: Interactive social media icons
 
-## 📊 Chapters of Wonder
+### Scroll-Based Animations
+- **Scroll-Triggered Reveals**: Elements that animate as they enter the viewport
+- **Parallax Scrolling**: Multi-speed scrolling effects for depth
+- **Section Transitions**: Smooth transitions between portfolio sections
 
-- **Home**: Where the journey begins (cue epic music) 🎵
-- **About**: Discover the legend behind the wizard 🧙‍♂️
-- **Skills**: Behold the arsenal of digital powers 💪
-- **Contact**: Reach out (no owl required) 🦉
+## Project Structure
 
-## 🔧 Personalization Potion
+```
+src/
+├── app/                  # Next.js app directory
+│   ├── layout.tsx        # Root layout component
+│   └── page.tsx          # Main page component
+├── components/           # Reusable components
+│   ├── AboutSection.tsx  # About section component
+│   ├── AnimatedSvg.tsx   # Reusable SVG animation component
+│   ├── ContactSection.tsx # Contact form section
+│   ├── HeroSection.tsx   # Hero/landing section
+│   ├── Navigation.tsx    # Navigation component
+│   └── SkillsSection.tsx # Skills display section
+├── utils/                # Utility functions
+│   ├── gsapUtils.ts      # Centralized GSAP utility functions
+│   └── magneticEffect.ts # Magnetic button effect utility
+└── styles/               # Global styles
+    └── globals.css       # Global CSS styles
+```
 
-- Rewrite your story in `index.html`
-- Mix your favorite colors in `style.css`
-- Conjure new spells (features) in `main.js`
+## GSAP Utilities
 
-## 📜 Scroll of Rights (License)
+The project includes centralized GSAP utilities to avoid redundant code:
 
-This magical artifact is protected by the ancient MIT License. Consult the [LICENSE](LICENSE) scroll for details.
+- **registerGSAPPlugins()**: Registers all GSAP plugins in one place
+- **cleanupGSAPAnimations()**: Handles proper cleanup of GSAP animations
 
-## 🧙‍♂️ The Mastermind
+## Getting Started
 
-Conjured into existence by the one and only [DaCrab](https://github.com/dacrab) 🦀
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
----
+## Customization
 
-Prepare to dazzle the digital realm with your enchanted online presence! ✨🌟
+### Adding New Animations
+
+1. Import necessary GSAP plugins in your component
+2. Use the centralized GSAP utilities for plugin registration and cleanup
+3. Create your animation within a useEffect hook
+4. Use the cleanupGSAPAnimations utility for proper cleanup
+
+### Creating New Sections
+
+1. Create a new component in the components directory
+2. Import and use the GSAP utilities
+3. Add your component to the main page.tsx file
+
+## Dependencies
+
+- Next.js
+- React
+- TypeScript
+- GSAP (with plugins: ScrollTrigger, ScrollSmoother, SplitText, DrawSVGPlugin, MorphSVGPlugin)
+- Framer Motion (for additional animations)
+- Tailwind CSS (for styling)
+
+## Performance Considerations
+
+- Animations are optimized to run efficiently
+- GSAP instances are properly cleaned up to prevent memory leaks
+- SVG animations are optimized for performance
+
+## License
+
+MIT

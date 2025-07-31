@@ -114,4 +114,4 @@ The project includes centralized GSAP utilities to avoid redundant code:
 
 ## License
 
-MIT
+[LICENCE](LICENCE)

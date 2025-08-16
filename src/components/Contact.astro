@@ -58,13 +58,36 @@ const socialLinks = [
   }
   
   @media (max-width: 768px) {
+    /* Minimize spacing for centered mobile layout */
+    #contact {
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-md);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    
+    .social-container {
+      margin-top: var(--space-sm);
+    }
+    
     .social-grid {
       grid-template-columns: 1fr;
       gap: var(--space-md);
+      margin-top: var(--space-md);
     }
     
     .social-link {
       padding: var(--space-md);
+    }
+    
+    /* Reduce title spacing */
+    #contact h2 {
+      margin-bottom: var(--space-sm);
+    }
+    
+    #contact h3 {
+      margin-bottom: var(--space-sm);
     }
   }
 </style>

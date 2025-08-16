@@ -1,0 +1,85 @@
+---
+const socialLinks = [
+  { platform: 'GITHUB', url: 'https://github.com' },
+  { platform: 'LINKEDIN', url: 'https://linkedin.com' },
+  { platform: 'TWITTER', url: 'https://twitter.com' },
+  { platform: 'DRIBBBLE', url: 'https://dribbble.com' }
+];
+---
+
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="text-huge text-center">LET'S CONNECT</h2>
+    
+    <div class="social-container">
+      <div class="social-links">
+        <h3 class="text-big text-center">FOLLOW & CONNECT</h3>
+        <div class="social-grid">
+          {socialLinks.map(social => (
+            <a href={social.url} class="social-link brutal-button" target="_blank" rel="noopener">
+              {social.platform}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .social-container {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-xl);
+  }
+  
+  .social-links {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+  }
+  
+  .social-link {
+    text-align: center;
+    font-size: 1rem;
+    padding: var(--space-lg);
+    transition: all 0.3s ease;
+  }
+  
+  .social-link:hover {
+    transform: translateY(-5px) rotate(2deg);
+  }
+  
+  @media (max-width: 768px) {
+    .social-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+    
+    .social-link {
+      padding: var(--space-md);
+    }
+  }
+</style>
+
+<script>
+  // Add hover effects to social links
+  const socialLinks = document.querySelectorAll('.social-link');
+  
+  socialLinks.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      link.style.transform = 'translateY(-5px) rotate(2deg)';
+    });
+    
+    link.addEventListener('mouseleave', () => {
+      link.style.transform = '';
+    });
+  });
+</script>

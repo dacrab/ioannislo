@@ -1,0 +1,90 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "A brutalist portfolio showcasing modern web development" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    
+    <slot />
+    
+    <script>
+      // Custom cursor functionality
+      const cursor = document.getElementById('cursor');
+      let mouseX = 0;
+      let mouseY = 0;
+      let cursorX = 0;
+      let cursorY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+      
+      function animateCursor() {
+        const speed = 0.2;
+        cursorX += (mouseX - cursorX) * speed;
+        cursorY += (mouseY - cursorY) * speed;
+        
+        if (cursor) {
+          cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+        }
+        
+        requestAnimationFrame(animateCursor);
+      }
+      
+      animateCursor();
+      
+      // Cursor hover effects
+      const hoverElements = document.querySelectorAll('a, button, .brutal-button, .brutal-card');
+      
+      hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor?.classList.add('hover');
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          cursor?.classList.remove('hover');
+        });
+      });
+      
+      // Hide cursor on mobile
+      if (window.innerWidth <= 768) {
+        cursor?.style.setProperty('display', 'none');
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  html {
+    font-family: system-ui, sans-serif;
+  }
+</style>

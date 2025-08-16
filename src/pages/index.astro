@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+import '../styles/brutalist.css';
+---
+
+<Layout title="Brutal Developer - Uncompromising Web Development">
+  <Navigation />
+  <main>
+    <Hero />
+    <About />
+    <Skills />
+    <Contact />
+  </main>
+  
+  <!-- Background elements for visual interest -->
+  <div class="bg-elements">
+    <div class="bg-element bg-element-1"></div>
+    <div class="bg-element bg-element-2"></div>
+    <div class="bg-element bg-element-3"></div>
+  </div>
+</Layout>
+
+<style>
+  main {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .bg-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bg-element {
+    position: absolute;
+    border: var(--border-thin) solid var(--fg);
+    opacity: 0.1;
+  }
+  
+  .bg-element-1 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent);
+    top: 10%;
+    right: 5%;
+    animation: float 8s ease-in-out infinite;
+    transform: rotate(45deg);
+  }
+  
+  .bg-element-2 {
+    width: 100px;
+    height: 300px;
+    background: var(--secondary);
+    bottom: 20%;
+    left: 10%;
+    animation: float 6s ease-in-out infinite reverse;
+    transform: rotate(-30deg);
+  }
+  
+  .bg-element-3 {
+    width: 150px;
+    height: 150px;
+    background: var(--tertiary);
+    top: 50%;
+    left: 50%;
+    animation: float 10s ease-in-out infinite;
+    transform: rotate(15deg) translate(-50%, -50%);
+  }
+  
+  @media (max-width: 768px) {
+    .bg-elements {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Smooth scrolling for the entire page
+  document.documentElement.style.scrollBehavior = 'smooth';
+  
+  // Add scroll-based animations
+  let ticking = false;
+  
+  function updateScrollEffects() {
+    const scrolled = window.pageYOffset;
+    
+    // Parallax effect for background elements
+    const bgElements = document.querySelectorAll('.bg-element');
+    bgElements.forEach((element, index) => {
+      const speed = (index + 1) * 0.2;
+      element.style.transform += ` translateY(${scrolled * speed}px)`;
+    });
+    
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateScrollEffects);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', requestTick);
+  
+  // Add loading animation
+  window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+  });
+</script>

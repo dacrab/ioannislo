@@ -1,33 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@400;700;900&display=swap');
 
 /* ============================================
-   BRUTALIST DESIGN SYSTEM - ENHANCED
+   BRUTALIST DESIGN SYSTEM
    ============================================ */
 
 :root {
-  /* Core Colors */
+  /* Colors */
   --black: #000000;
   --white: #ffffff;
-  --red: #ff0000;
+  --accent: rgb(240, 0, 0);
   --yellow: #ffff00;
-  --blue: #0000ff;
-  --green: #00ff00;
-  --magenta: #ff00ff;
-  --cyan: #00ffff;
-  
-  /* Grays */
-  --gray-100: #f5f5f5;
-  --gray-200: #e5e5e5;
-  --gray-300: #d4d4d4;
-  --gray-800: #e6e6e6;
-  --gray-900: #171717;
-  
-  /* Semantic Colors */
-  --bg: var(--white);
-  --fg: var(--black);
-  --accent: var(--red);
-  --secondary: var(--yellow);
-  --tertiary: var(--blue);
+  --blue: #0066ff;
   
   /* Typography */
   --font-mono: 'JetBrains Mono', monospace;
@@ -39,27 +22,13 @@
   --space-md: 1rem;
   --space-lg: 2rem;
   --space-xl: 4rem;
-  --space-2xl: 8rem;
   
   /* Borders */
-  --border-thin: 2px;
+  --border: 3px;
   --border-thick: 4px;
-  --border-mega: 8px;
   
   /* Shadows */
-  --shadow-brutal: 8px 8px 0px var(--black);
-  --shadow-mega: 16px 16px 0px var(--black);
-  --shadow-inset: inset 4px 4px 0px var(--black);
-}
-
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--black);
-    --fg: var(--white);
-    --gray-100: var(--gray-900);
-    --gray-200: var(--gray-800);
-  }
+  --shadow: 8px 8px 0px var(--black);
 }
 
 /* ============================================
@@ -72,15 +41,14 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px;
 }
 
 body {
   margin: 0;
   padding: 0;
   font-family: var(--font-mono);
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--white);
+  color: var(--black);
   line-height: 1.4;
   overflow-x: hidden;
   cursor: none;
@@ -92,8 +60,7 @@ body {
   width: 20px;
   height: 20px;
   background: var(--accent);
-  border: var(--border-thin) solid var(--fg);
-  border-radius: 0;
+  border: 2px solid var(--black);
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
@@ -105,7 +72,7 @@ body {
 }
 
 /* ============================================
-   TYPOGRAPHY SYSTEM
+   TYPOGRAPHY
    ============================================ */
 
 .text-mega {
@@ -113,8 +80,8 @@ body {
   font-size: clamp(4rem, 15vw, 20rem);
   font-weight: 900;
   line-height: 0.8;
-  letter-spacing: -0.05em;
   text-transform: uppercase;
+  letter-spacing: -0.05em;
 }
 
 .text-huge {
@@ -122,7 +89,6 @@ body {
   font-size: clamp(2rem, 8vw, 8rem);
   font-weight: 900;
   line-height: 0.9;
-  letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 
@@ -150,45 +116,8 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* Text Effects */
-.text-outline {
-  -webkit-text-stroke: var(--border-thin) var(--fg);
-  color: transparent;
-}
-
-.text-shadow {
-  text-shadow: 4px 4px 0px var(--accent);
-}
-
-.text-glitch {
-  position: relative;
-  animation: glitch 3s infinite;
-}
-
-.text-glitch::before,
-.text-glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.text-glitch::before {
-  color: var(--red);
-  z-index: -1;
-  animation: glitch-1 0.3s infinite;
-}
-
-.text-glitch::after {
-  color: var(--blue);
-  z-index: -2;
-  animation: glitch-2 0.3s infinite;
-}
-
 /* ============================================
-   LAYOUT COMPONENTS
+   LAYOUT
    ============================================ */
 
 .container {
@@ -197,31 +126,19 @@ body {
   padding: 0 var(--space-lg);
 }
 
-.grid-brutal {
-  display: grid;
-  gap: var(--space-lg);
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.flex-brutal {
-  display: flex;
-  gap: var(--space-lg);
-  flex-wrap: wrap;
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
+.section {
+  min-height: 100vh;
+  padding: var(--space-xl) 0;
+  position: relative;
 }
 
 /* ============================================
-   BRUTALIST COMPONENTS
+   COMPONENTS
    ============================================ */
 
 .brutal-card {
-  background: var(--bg);
-  border: var(--border-thick) solid var(--fg);
+  background: var(--white);
+  border: var(--border-thick) solid var(--black);
   padding: var(--space-lg);
   position: relative;
   transition: all 0.2s ease;
@@ -230,10 +147,10 @@ body {
 .brutal-card::before {
   content: '';
   position: absolute;
-  top: var(--border-mega);
-  left: var(--border-mega);
-  right: calc(-1 * var(--border-mega));
-  bottom: calc(-1 * var(--border-mega));
+  top: var(--border-thick);
+  left: var(--border-thick);
+  right: calc(-1 * var(--border-thick));
+  bottom: calc(-1 * var(--border-thick));
   background: var(--accent);
   z-index: -1;
   transition: all 0.2s ease;
@@ -248,9 +165,9 @@ body {
 }
 
 .brutal-button {
-  background: var(--fg);
-  color: var(--bg);
-  border: var(--border-thick) solid var(--fg);
+  background: var(--black);
+  color: var(--white);
+  border: var(--border-thick) solid var(--black);
   padding: var(--space-md) var(--space-lg);
   font-family: var(--font-mono);
   font-weight: 700;
@@ -282,27 +199,6 @@ body {
   transform: translate(4px, 4px);
 }
 
-.brutal-button.secondary {
-  background: var(--bg);
-  color: var(--fg);
-}
-
-.brutal-input {
-  background: var(--bg);
-  border: var(--border-thick) solid var(--fg);
-  padding: var(--space-md);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  width: 100%;
-  position: relative;
-}
-
-.brutal-input:focus {
-  outline: none;
-  box-shadow: var(--shadow-brutal);
-}
-
 /* ============================================
    NAVIGATION
    ============================================ */
@@ -312,8 +208,8 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: var(--bg);
-  border-bottom: var(--border-thick) solid var(--fg);
+  background: var(--white);
+  border-bottom: var(--border-thick) solid var(--black);
   z-index: 1000;
   padding: var(--space-md) 0;
 }
@@ -330,7 +226,7 @@ body {
   font-size: 1.5rem;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--fg);
+  color: var(--black);
 }
 
 .nav-menu {
@@ -346,35 +242,45 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--fg);
+  color: var(--black);
   padding: var(--space-sm) var(--space-md);
-  border: var(--border-thin) solid transparent;
+  border: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  border-color: var(--fg);
+  border-color: var(--black);
   background: var(--accent);
-  color: var(--bg);
+  color: var(--white);
+}
+
+.nav-mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: none;
+}
+
+.nav-mobile-toggle span {
+  width: 25px;
+  height: 3px;
+  background: var(--black);
+  transition: all 0.3s ease;
 }
 
 /* ============================================
-   SECTIONS
+   HERO SECTION
    ============================================ */
-
-.section {
-  min-height: 100vh;
-  padding: var(--space-2xl) 0;
-  position: relative;
-}
 
 .section-hero {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(45deg, var(--bg) 25%, var(--gray-100) 25%, var(--gray-100) 50%, var(--bg) 50%, var(--bg) 75%, var(--gray-100) 75%);
+  background: linear-gradient(45deg, var(--white) 25%, #f5f5f5 25%, #f5f5f5 50%, var(--white) 50%, var(--white) 75%, #f5f5f5 75%);
   background-size: 40px 40px;
 }
 
@@ -388,7 +294,7 @@ body {
 
 .hero-subtitle {
   margin-bottom: var(--space-xl);
-  color: var(--gray-800);
+  color: #666;
 }
 
 .hero-cta {
@@ -399,134 +305,320 @@ body {
 }
 
 /* ============================================
-   ANIMATIONS
+   ABOUT SECTION
    ============================================ */
 
-@keyframes glitch {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
+.about-title {
+  color: var(--white);
+  position: relative;
+  z-index: 10;
 }
 
-@keyframes glitch-1 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-1px, 1px); }
-  40% { transform: translate(-1px, -1px); }
-  60% { transform: translate(1px, 1px); }
-  80% { transform: translate(1px, -1px); }
+.about-text {
+  color: var(--black);
+  position: relative;
+  z-index: 10;
 }
 
-@keyframes glitch-2 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(1px, -1px); }
-  40% { transform: translate(1px, 1px); }
-  60% { transform: translate(-1px, -1px); }
-  80% { transform: translate(-1px, 1px); }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+.stat-card {
+  text-align: center;
+  padding: var(--space-lg);
+  opacity: 0;
+  animation: slideInUp 0.8s ease forwards;
+  position: relative;
+  z-index: 10;
 }
 
-@keyframes pulse-brutal {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.stat-number {
+  margin-bottom: var(--space-sm);
+  display: block;
+  color: var(--white);
+  font-weight: 900;
+  position: relative;
+  z-index: 10;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.stat-label {
+  color: var(--black);
+  position: relative;
+  z-index: 10;
 }
 
-.animate-pulse-brutal {
-  animation: pulse-brutal 2s ease-in-out infinite;
+.philosophy-section {
+  margin-top: var(--space-xl);
+}
+
+.philosophy-card {
+  background: var(--accent);
+  border: var(--border-thick) solid var(--black);
+  position: relative;
+  z-index: 10;
+}
+
+.philosophy-title {
+  color: var(--black);
+  position: relative;
+  z-index: 10;
+}
+
+.philosophy-quote {
+  margin: var(--space-lg) 0;
+  font-style: italic;
+  color: var(--black);
+  position: relative;
+  z-index: 10;
+}
+
+.philosophy-cite {
+  display: block;
+  text-align: right;
+  color: var(--black);
+  opacity: 0.8;
+  position: relative;
+  z-index: 10;
 }
 
 /* ============================================
-   INTERACTIVE ELEMENTS
+   SKILLS SECTION
    ============================================ */
+
+.skills-main-title {
+  position: relative;
+  z-index: 10;
+}
+
+.skills-primary {
+  margin-bottom: var(--space-xl);
+}
+
+.skills-primary h3 {
+  margin-bottom: var(--space-lg);
+  text-align: center;
+}
 
 .skill-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-md);
+  margin-top: var(--space-md);
 }
 
 .skill-item {
-  aspect-ratio: 1;
-  background: var(--bg);
-  border: var(--border-thick) solid var(--fg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  opacity: 0;
+  animation: popIn 0.6s ease forwards;
+  background: var(--white);
+  border: var(--border) solid var(--black);
+  padding: var(--space-md);
   text-align: center;
   position: relative;
-  transition: all 0.2s ease;
+  z-index: 10;
 }
 
-.skill-item::before {
-  content: '';
-  position: absolute;
-  top: var(--border-thick);
-  left: var(--border-thick);
-  right: calc(-1 * var(--border-thick));
-  bottom: calc(-1 * var(--border-thick));
-  background: var(--secondary);
-  z-index: -1;
-  transform: translate(0, 0);
-  transition: all 0.2s ease;
-}
-
-.skill-item:hover {
-  transform: translate(-4px, -4px);
-}
-
-.skill-item:hover::before {
-  transform: translate(8px, 8px);
-}
-
-.project-card {
-  background: var(--bg);
-  border: var(--border-thick) solid var(--fg);
-  overflow: hidden;
+.skill-item span {
+  color: var(--black);
+  font-weight: 700;
   position: relative;
-  transition: all 0.3s ease;
+  z-index: 10;
 }
 
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: var(--border-thick);
-  left: var(--border-thick);
-  right: calc(-1 * var(--border-thick));
-  bottom: calc(-1 * var(--border-thick));
-  background: var(--tertiary);
-  z-index: -1;
-  transform: translate(100%, 100%);
-  transition: all 0.3s ease;
+.skills-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
-.project-card:hover::before {
-  transform: translate(0, 0);
+.skill-category {
+  opacity: 0;
+  animation: slideInUp 0.8s ease forwards;
+  position: relative;
+  z-index: 10;
 }
 
-.project-image {
-  width: 100%;
-  height: 200px;
-  background: var(--gray-200);
-  border-bottom: var(--border-thick) solid var(--fg);
+.category-title {
+  margin-bottom: var(--space-lg);
+  text-align: center;
+  color: var(--white);
+  position: relative;
+  z-index: 10;
+}
+
+.category-skills {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
   justify-content: center;
+}
+
+.skill-badge {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--black);
+  color: var(--white);
+  border: 2px solid var(--black);
+  opacity: 0;
+  animation: fadeInScale 0.5s ease forwards;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 10;
 }
 
-.project-content {
+.skill-badge:hover {
+  background: var(--accent);
+  color: var(--black);
+  transform: scale(1.1) rotate(2deg);
+}
+
+.skills-philosophy {
+  text-align: center;
+}
+
+.philosophy-text {
+  color: var(--black);
+  position: relative;
+  z-index: 10;
+}
+
+/* ============================================
+   CONTACT SECTION
+   ============================================ */
+
+.social-container {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+}
+
+.social-links {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.social-link {
+  text-align: center;
+  font-size: 1rem;
   padding: var(--space-lg);
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-5px) rotate(2deg);
+}
+
+/* ============================================
+   BACKGROUND ELEMENTS
+   ============================================ */
+
+.bg-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-element {
+  position: absolute;
+  border: 2px solid var(--black);
+  opacity: 0.1;
+}
+
+.bg-element-1 {
+  width: 200px;
+  height: 200px;
+  background: var(--accent);
+  top: 10%;
+  right: 5%;
+  animation: float 8s ease-in-out infinite;
+  transform: rotate(45deg);
+}
+
+.bg-element-2 {
+  width: 100px;
+  height: 300px;
+  background: var(--yellow);
+  bottom: 20%;
+  left: 10%;
+  animation: float 6s ease-in-out infinite reverse;
+  transform: rotate(-30deg);
+}
+
+.bg-element-3 {
+  width: 150px;
+  height: 150px;
+  background: var(--blue);
+  top: 50%;
+  left: 50%;
+  animation: float 10s ease-in-out infinite;
+  transform: rotate(15deg) translate(-50%, -50%);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(180deg);
+  }
+  70% {
+    transform: scale(1.1) rotate(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-20px); 
+  }
 }
 
 /* ============================================
@@ -537,24 +629,6 @@ body {
   :root {
     --space-lg: 1rem;
     --space-xl: 2rem;
-    --space-2xl: 4rem;
-  }
-  
-  .nav-menu {
-    display: none;
-  }
-  
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .grid-brutal {
-    grid-template-columns: 1fr;
-  }
-  
-  .flex-brutal {
-    flex-direction: column;
   }
   
   body {
@@ -564,32 +638,63 @@ body {
   .cursor {
     display: none;
   }
+  
+  .nav-mobile-toggle {
+    display: flex;
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: var(--white);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    border-left: var(--border-thick) solid var(--black);
+  }
+  
+  .nav-menu.active {
+    right: 0;
+  }
+  
+  .nav-link {
+    font-size: 2rem;
+    padding: var(--space-lg);
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .skills-categories {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bg-elements {
+    display: none;
+  }
 }
 
 /* ============================================
-   UTILITY CLASSES
+   MAIN LAYOUT
    ============================================ */
 
-.bg-accent { background: var(--accent); }
-.bg-secondary { background: var(--secondary); }
-.bg-tertiary { background: var(--tertiary); }
-
-.text-accent { color: var(--accent); }
-.text-secondary { color: var(--secondary); }
-.text-tertiary { color: var(--tertiary); }
-
-.border-accent { border-color: var(--accent); }
-.border-secondary { border-color: var(--secondary); }
-.border-tertiary { border-color: var(--tertiary); }
-
-.rotate-1 { transform: rotate(1deg); }
-.rotate-2 { transform: rotate(2deg); }
-.rotate-3 { transform: rotate(3deg); }
-.-rotate-1 { transform: rotate(-1deg); }
-.-rotate-2 { transform: rotate(-2deg); }
-.-rotate-3 { transform: rotate(-3deg); }
-
-.skew-1 { transform: skewX(1deg); }
-.skew-2 { transform: skewX(2deg); }
-.-skew-1 { transform: skewX(-1deg); }
-.-skew-2 { transform: skewX(-2deg); }
+main {
+  position: relative;
+  z-index: 1;
+}

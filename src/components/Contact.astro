@@ -26,83 +26,20 @@ const socialLinks = [
   </div>
 </section>
 
-<style>
-  .social-container {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--space-xl);
-  }
-  
-  .social-links {
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .social-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
-    margin-top: var(--space-xl);
-  }
-  
-  .social-link {
-    text-align: center;
-    font-size: 1rem;
-    padding: var(--space-lg);
-    transition: all 0.3s ease;
-  }
-  
-  .social-link:hover {
-    transform: translateY(-5px) rotate(2deg);
-  }
-  
-  @media (max-width: 768px) {
-    /* Minimize spacing for centered mobile layout */
-    #contact {
-      padding-top: var(--space-lg);
-      padding-bottom: var(--space-md);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
-    
-    .social-container {
-      margin-top: var(--space-sm);
-    }
-    
-    .social-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-md);
-      margin-top: var(--space-md);
-    }
-    
-    .social-link {
-      padding: var(--space-md);
-    }
-    
-    /* Reduce title spacing */
-    #contact h2 {
-      margin-bottom: var(--space-sm);
-    }
-    
-    #contact h3 {
-      margin-bottom: var(--space-sm);
-    }
-  }
-</style>
+
 
 <script>
   // Add hover effects to social links
   const socialLinks = document.querySelectorAll('.social-link');
   
   socialLinks.forEach(link => {
+    const htmlLink = link as HTMLElement;
     link.addEventListener('mouseenter', () => {
-      link.style.transform = 'translateY(-5px) rotate(2deg)';
+      htmlLink.style.transform = 'translateY(-5px) rotate(2deg)';
     });
     
     link.addEventListener('mouseleave', () => {
-      link.style.transform = '';
+      htmlLink.style.transform = '';
     });
   });
 </script>

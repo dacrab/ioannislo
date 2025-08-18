@@ -1,0 +1,53 @@
+# Auto-labeling configuration for PRs
+
+# Frontend/UI changes
+"🎨 frontend":
+  - src/components/**/*
+  - src/styles/**/*
+  - src/layouts/**/*
+  - "**/*.astro"
+  - "**/*.css"
+
+# TypeScript/JavaScript changes
+"💻 code":
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+
+# Configuration changes  
+"⚙️ config":
+  - "*.config.*"
+  - "tsconfig.json"
+  - ".eslintrc*"
+  - ".prettierrc*"
+  - "astro.config.mjs"
+
+# Dependencies
+"📦 dependencies":
+  - package.json
+  - bun.lock
+  - package-lock.json
+
+# Documentation
+"📚 documentation":
+  - "**/*.md"
+  - "**/*.mdx"
+  - README.md
+  - docs/**/*
+
+# GitHub Actions/CI
+"🚀 ci/cd":
+  - .github/workflows/**/*
+  - .github/dependabot.yml
+
+# Build/deployment
+"🔨 build":
+  - dist/**/*
+  - "*.config.*"
+
+# Maintenance/chores
+"🧹 maintenance":
+  - .gitignore
+  - .prettierignore
+  - LICENSE

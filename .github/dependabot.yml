@@ -1,0 +1,42 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Use semantic commit messages
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    # Group updates for better PR management
+    groups:
+      astro:
+        patterns:
+          - "astro*"
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@eslint*"
+      typescript:
+        patterns:
+          - "typescript*"
+          - "@typescript-eslint*"
+          - "@types/*"
+    # Allow dependabot to open max 10 PRs at once
+    open-pull-requests-limit: 10
+    # Add reviewers and assignees
+    reviewers:
+      - "dacrab"
+    assignees:
+      - "dacrab"
+
+  # Keep GitHub Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
+      include: "scope"

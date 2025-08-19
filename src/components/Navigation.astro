@@ -3,27 +3,27 @@ const navItems = [
   { href: '#home', label: 'Home' },
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
-  { href: '#contact', label: 'Contact' }
+  { href: '#contact', label: 'Contact' },
 ];
 ---
 
 <nav class="nav-brutal">
   <div class="container">
     <div class="nav-content">
-      <a href="#home" class="nav-logo">
-        BRUTAL.DEV
-      </a>
-      
+      <a href="#home" class="nav-logo"> BRUTAL.DEV</a>
+
       <ul class="nav-menu">
-        {navItems.map(item => (
-          <li>
-            <a href={item.href} class="nav-link">
-              {item.label}
-            </a>
-          </li>
-        ))}
+        {
+          navItems.map(item => (
+            <li>
+              <a href={item.href} class="nav-link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
-      
+
       <!-- Mobile menu button -->
       <button class="nav-mobile-toggle" id="mobile-toggle">
         <span></span>
@@ -34,12 +34,10 @@ const navItems = [
   </div>
 </nav>
 
-
-
 <script>
   // Smooth scrolling for navigation links
   document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', e => {
       e.preventDefault();
       const href = link.getAttribute('href');
       if (href && href.startsWith('#')) {
@@ -47,20 +45,20 @@ const navItems = [
         if (target) {
           target.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
         }
       }
     });
   });
-  
+
   // Active link highlighting
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
-  
+
   function updateActiveLink() {
     let current = '';
-    
+
     sections.forEach(section => {
       const htmlSection = section as HTMLElement;
       const sectionTop = htmlSection.offsetTop;
@@ -68,7 +66,7 @@ const navItems = [
         current = section.getAttribute('id') || '';
       }
     });
-    
+
     navLinks.forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('href') === `#${current}`) {
@@ -76,20 +74,20 @@ const navItems = [
       }
     });
   }
-  
+
   window.addEventListener('scroll', updateActiveLink);
   updateActiveLink();
-  
+
   // Mobile menu toggle functionality
   const mobileToggle = document.getElementById('mobile-toggle');
   const navMenu = document.querySelector('.nav-menu');
-  
+
   if (mobileToggle && navMenu) {
     mobileToggle.addEventListener('click', () => {
       mobileToggle.classList.toggle('active');
       navMenu.classList.toggle('active');
     });
-    
+
     // Close mobile menu when clicking on a navigation link
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => {
@@ -97,10 +95,13 @@ const navItems = [
         navMenu.classList.remove('active');
       });
     });
-    
+
     // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!mobileToggle.contains(e.target as Node) && !navMenu.contains(e.target as Node)) {
+    document.addEventListener('click', e => {
+      if (
+        !mobileToggle.contains(e.target as Node) &&
+        !navMenu.contains(e.target as Node)
+      ) {
         mobileToggle.classList.remove('active');
         navMenu.classList.remove('active');
       }

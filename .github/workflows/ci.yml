@@ -46,7 +46,13 @@ jobs:
         run: bun run lint
 
       - name: Check code formatting
-        run: bun run format:check
+        run: |
+          if ! bun run format:check; then
+            echo "❌ Code formatting issues found!"
+            echo "💡 Fix by running: bun run format"
+            echo "📝 This will auto-format all your code files."
+            exit 1
+          fi
 
       - name: Check Astro types
         run: bun run check

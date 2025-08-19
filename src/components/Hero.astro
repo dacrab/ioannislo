@@ -7,24 +7,26 @@
     <div class="hero-content">
       <h1 class="text-mega hero-title">
         <span class="text-glitch" data-text="BRUTAL">BRUTAL</span>
-        <br>
+        <br />
         <span class="text-outline">DEVELOPER</span>
       </h1>
-      
+
       <p class="text-body hero-subtitle">
-        Junior developer passionate about creating clean, functional web experiences. 
-        Learning, building, and growing one project at a time.
+        Junior developer passionate about creating clean, functional web
+        experiences. Learning, building, and growing one project at a time.
       </p>
-      
+
       <div class="hero-cta">
-        <a href="/IOANNIS_LOUGIAKIS_CV.pdf" download="IOANNIS_LOUGIAKIS_CV.pdf" class="brutal-button">
+        <a
+          href="/IOANNIS_LOUGIAKIS_CV.pdf"
+          download="IOANNIS_LOUGIAKIS_CV.pdf"
+          class="brutal-button"
+        >
           DOWNLOAD CV
         </a>
-        <a href="#contact" class="brutal-button secondary">
-          GET IN TOUCH
-        </a>
+        <a href="#contact" class="brutal-button secondary"> GET IN TOUCH</a>
       </div>
-      
+
       <!-- Floating elements for visual interest -->
       <div class="hero-decorations">
         <div class="decoration decoration-1"></div>
@@ -35,17 +37,15 @@
   </div>
 </section>
 
-
-
 <script>
   // Add entrance animations
   const heroElements = document.querySelectorAll('.hero-content > *');
-  
+
   heroElements.forEach((el, index) => {
     const htmlEl = el as HTMLElement;
     htmlEl.style.opacity = '0';
     htmlEl.style.transform = 'translateY(50px)';
-    
+
     setTimeout(() => {
       htmlEl.style.transition = 'all 0.8s ease';
       htmlEl.style.opacity = '1';

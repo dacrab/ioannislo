@@ -16,7 +16,7 @@ import '../styles/brutalist.css';
     <Skills />
     <Contact />
   </main>
-  
+
   <!-- Background elements for visual interest -->
   <div class="bg-elements">
     <div class="bg-element bg-element-1"></div>
@@ -25,18 +25,16 @@ import '../styles/brutalist.css';
   </div>
 </Layout>
 
-
-
 <script>
   // Smooth scrolling for the entire page
   document.documentElement.style.scrollBehavior = 'smooth';
-  
+
   // Add scroll-based animations
   let ticking = false;
-  
+
   function updateScrollEffects() {
     const scrolled = window.pageYOffset;
-    
+
     // Parallax effect for background elements
     const bgElements = document.querySelectorAll('.bg-element');
     bgElements.forEach((element, index) => {
@@ -44,19 +42,19 @@ import '../styles/brutalist.css';
       const speed = (index + 1) * 0.2;
       htmlElement.style.transform += ` translateY(${scrolled * speed}px)`;
     });
-    
+
     ticking = false;
   }
-  
+
   function requestTick() {
     if (!ticking) {
       requestAnimationFrame(updateScrollEffects);
       ticking = true;
     }
   }
-  
+
   window.addEventListener('scroll', requestTick);
-  
+
   // Add loading animation
   window.addEventListener('load', () => {
     document.body.classList.add('loaded');

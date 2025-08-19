@@ -3,41 +3,46 @@ const socialLinks = [
   { platform: 'GITHUB', url: 'https://github.com' },
   { platform: 'LINKEDIN', url: 'https://linkedin.com' },
   { platform: 'TWITTER', url: 'https://twitter.com' },
-  { platform: 'DRIBBBLE', url: 'https://dribbble.com' }
+  { platform: 'DRIBBBLE', url: 'https://dribbble.com' },
 ];
 ---
 
 <section id="contact" class="section">
   <div class="container">
     <h2 class="text-huge text-center">LET'S CONNECT</h2>
-    
+
     <div class="social-container">
       <div class="social-links">
         <h3 class="text-big text-center">FOLLOW & CONNECT</h3>
         <div class="social-grid">
-          {socialLinks.map(social => (
-            <a href={social.url} class="social-link brutal-button" target="_blank" rel="noopener">
-              {social.platform}
-            </a>
-          ))}
+          {
+            socialLinks.map(social => (
+              <a
+                href={social.url}
+                class="social-link brutal-button"
+                target="_blank"
+                rel="noopener"
+              >
+                {social.platform}
+              </a>
+            ))
+          }
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
-
 <script>
   // Add hover effects to social links
   const socialLinks = document.querySelectorAll('.social-link');
-  
+
   socialLinks.forEach(link => {
     const htmlLink = link as HTMLElement;
     link.addEventListener('mouseenter', () => {
       htmlLink.style.transform = 'translateY(-5px) rotate(2deg)';
     });
-    
+
     link.addEventListener('mouseleave', () => {
       htmlLink.style.transform = '';
     });

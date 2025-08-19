@@ -1,0 +1,45 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "astro",
+    "astrojs", 
+    "brutalist",
+    "Ioannis",
+    "Lougiakis",
+    "dacrab",
+    "github",
+    "typescript",
+    "lightningcss",
+    "jsx",
+    "tsx",
+    "eslint", 
+    "tsconfig",
+    "renovate",
+    "kodiak",
+    "vercel",
+    "bun",
+    "GSAP",
+    "Contentful",
+    "Grotesk",
+    "DRIBBBLE"
+  ],
+  "ignoreWords": [
+    "IOANNIS",
+    "LOUGIAKIS"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    ".astro/**",
+    "*.lock",
+    "*.lockb",
+    "package-lock.json",
+    "bun.lock"
+  ],
+  "files": [
+    "**/*.{md,mdx,txt}",
+    "src/**/*.{astro,ts,tsx,js,jsx}",
+    "README.md"
+  ]
+}

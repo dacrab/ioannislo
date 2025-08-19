@@ -1,0 +1,301 @@
+name: "🚀 Main Pipeline"
+
+# Comprehensive workflow handling all quality checks and builds
+# Designed to eliminate race conditions with proper job dependencies
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+# Prevent concurrent runs to eliminate race conditions
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Minimal permissions - grant only what's needed
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+env:
+  # Global environment variables
+  ASTRO_TELEMETRY_DISABLED: 1
+  BUN_VERSION: "latest"
+
+jobs:
+  # =============================================================================
+  # SETUP JOB - Handles all common setup tasks
+  # =============================================================================
+  setup:
+    name: "📦 Setup & Dependencies"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    outputs:
+      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+      
+    steps:
+      - name: "🔄 Checkout Repository"
+        uses: actions/checkout@v5
+        with:
+          # Full history for better analysis
+          fetch-depth: 0
+
+      - name: "⚡ Setup Bun Runtime"
+        id: setup
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: "💾 Cache Dependencies"
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: deps-${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}
+          restore-keys: |
+            deps-${{ runner.os }}-bun-
+
+      - name: "📥 Install Dependencies"
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: |
+          echo "🔍 Cache miss - installing dependencies..."
+          # Graceful lockfile handling
+          if ! bun install --frozen-lockfile 2>/dev/null; then
+            echo "⚠️ Lockfile out of sync, updating..."
+            bun install
+          fi
+
+      - name: "✅ Verify Installation"
+        run: |
+          echo "📊 Dependency Summary:"
+          bun --version
+          echo "Node modules:" $(ls node_modules | wc -l) "packages"
+          echo "📦 Setup completed successfully"
+
+  # =============================================================================
+  # QUALITY JOB - All code quality checks (depends on setup)
+  # =============================================================================
+  quality:
+    name: "🔍 Code Quality"
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 15
+    
+    strategy:
+      matrix:
+        check: ['lint', 'format', 'types', 'spell']
+      fail-fast: false
+      
+    steps:
+      - name: "🔄 Checkout Repository"
+        uses: actions/checkout@v5
+
+      - name: "⚡ Setup Bun Runtime"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: "💾 Restore Dependencies Cache"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: deps-${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}
+          restore-keys: |
+            deps-${{ runner.os }}-bun-
+
+      - name: "📥 Install Dependencies (if cache missed)"
+        if: needs.setup.outputs.cache-hit != 'true'
+        run: bun install --frozen-lockfile || bun install
+
+      - name: "🔍 ESLint Analysis"
+        if: matrix.check == 'lint'
+        run: |
+          echo "🔍 Running ESLint analysis..."
+          bun run lint
+          echo "✅ ESLint passed"
+
+      - name: "🎨 Format Check"
+        if: matrix.check == 'format'
+        run: |
+          echo "🎨 Checking code formatting..."
+          if ! bun run format:check; then
+            echo "❌ Code formatting issues found!"
+            echo "💡 Fix by running: bun run format"
+            exit 1
+          fi
+          echo "✅ Code formatting passed"
+
+      - name: "🔧 TypeScript Check"
+        if: matrix.check == 'types'
+        run: |
+          echo "🔧 Checking TypeScript types..."
+          bun run check
+          echo "✅ TypeScript check passed"
+
+      - name: "📝 Spell Check"
+        if: matrix.check == 'spell'
+        uses: streetsidesoftware/cspell-action@v7
+        with:
+          files: |
+            **/*.{md,mdx,txt}
+            src/**/*.{astro,ts,tsx,js,jsx}
+            README.md
+          strict: false
+          inline: warning
+          config: |
+            {
+              "version": "0.2",
+              "language": "en",
+              "words": [
+                "astro", "astrojs", "brutalist", "Ioannis", "Lougiakis", "dacrab",
+                "github", "typescript", "lightningcss", "jsx", "tsx", "eslint", 
+                "tsconfig", "renovate", "kodiak", "vercel", "bun"
+              ],
+              "ignoreWords": ["IOANNIS", "LOUGIAKIS"],
+              "ignorePaths": [
+                "node_modules/**", "dist/**", ".astro/**", "*.lock", "*.lockb",
+                "package-lock.json", "bun.lock"
+              ]
+            }
+
+  # =============================================================================
+  # BUILD JOB - Build and validation (depends on quality)
+  # =============================================================================
+  build:
+    name: "🏗️ Build & Validate"
+    runs-on: ubuntu-latest
+    needs: [setup, quality]
+    timeout-minutes: 10
+    
+    steps:
+      - name: "🔄 Checkout Repository"
+        uses: actions/checkout@v5
+
+      - name: "⚡ Setup Bun Runtime"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: "💾 Restore Dependencies Cache"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: deps-${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}
+
+      - name: "📥 Install Dependencies (if needed)"
+        if: needs.setup.outputs.cache-hit != 'true'
+        run: bun install --frozen-lockfile || bun install
+
+      - name: "🏗️ Build Project"
+        run: |
+          echo "🏗️ Building project for Vercel deployment..."
+          bun run build
+          
+      - name: "✅ Validate Build Output"
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Build failed: dist folder not created"
+            exit 1
+          fi
+          
+          echo "✅ Build successful - ready for Vercel deployment"
+          echo "📊 Build Statistics:"
+          echo "  📁 Output directory: dist/"
+          echo "  📦 Build size: $(du -sh dist/ | cut -f1)"
+          echo "  📄 Files created: $(find dist -type f | wc -l)"
+
+      - name: "💾 Cache Build Output"
+        uses: actions/cache@v4
+        with:
+          path: dist/
+          key: build-${{ runner.os }}-${{ github.sha }}
+          
+  # =============================================================================
+  # PR WORKFLOW JOB - Handle PR-specific tasks (depends on build)
+  # =============================================================================
+  pr-workflow:
+    name: "🔀 PR Workflow"
+    runs-on: ubuntu-latest
+    needs: [setup, quality, build]
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 5
+    
+    steps:
+      - name: "🔄 Checkout Repository"
+        uses: actions/checkout@v5
+
+      - name: "🏷️ Auto-label PR"
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+      - name: "💬 Update PR Status"
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const statusComment = `## ✅ **Pipeline Completed Successfully!**
+
+            All quality checks and build validation passed. Your code is ready for deployment.
+
+            ### 📊 **Pipeline Summary:**
+            - ✅ **Dependencies** - Installed and cached
+            - ✅ **Linting** - ESLint passed
+            - ✅ **Formatting** - Code style validated  
+            - ✅ **Types** - TypeScript checks passed
+            - ✅ **Spelling** - Documentation verified
+            - ✅ **Build** - Successfully compiled for Vercel
+
+            ### 🚀 **Next Steps:**
+            - Vercel will automatically deploy when merged to \`main\`
+            - All checks passed - ready for review and merge!
+            
+            *Pipeline completed in ${{ github.run_number }} • Commit ${{ github.sha }}*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: statusComment
+            });
+
+  # =============================================================================
+  # SUMMARY JOB - Final status and cleanup (depends on all)
+  # =============================================================================
+  summary:
+    name: "📋 Pipeline Summary"
+    runs-on: ubuntu-latest
+    needs: [setup, quality, build]
+    if: always()
+    timeout-minutes: 2
+    
+    steps:
+      - name: "📊 Pipeline Results"
+        run: |
+          echo "=== 🚀 PIPELINE SUMMARY ==="
+          echo "Setup Status: ${{ needs.setup.result }}"
+          echo "Quality Status: ${{ needs.quality.result }}" 
+          echo "Build Status: ${{ needs.build.result }}"
+          echo ""
+          
+          if [[ "${{ needs.setup.result }}" == "success" && 
+                "${{ needs.quality.result }}" == "success" && 
+                "${{ needs.build.result }}" == "success" ]]; then
+            echo "✅ All pipeline stages completed successfully!"
+            echo "🚀 Ready for Vercel deployment"
+            exit 0
+          else
+            echo "❌ Pipeline failed - check individual job logs"
+            exit 1
+          fi

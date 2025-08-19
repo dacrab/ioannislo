@@ -8,17 +8,19 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
-  lint-and-type-check:
-    name: Lint & Type Check
+  quality:
+    name: Code Quality & Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -38,74 +40,97 @@ jobs:
       - name: Run ESLint
         run: bun run lint
 
+      - name: Check code formatting
+        run: bun run format:check
+
       - name: Check Astro types
         run: bun run check
 
-  format-check:
-    name: Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Spell check
+        uses: streetsidesoftware/cspell-action@v7
         with:
-          bun-version: latest
+          files: |
+            **/*.{md,mdx,txt}
+            src/**/*.{astro,ts,tsx,js,jsx}
+            README.md
+          strict: false
+          inline: warning
+          config: |
+            {
+              "version": "0.2",
+              "language": "en",
+              "words": [
+                "astro",
+                "astrojs", 
+                "brutalist",
+                "Ioannis",
+                "Lougiakis",
+                "dacrab",
+                "github",
+                "typescript",
+                "lightningcss",
+                "jsx",
+                "tsx",
+                "eslint",
+                "tsconfig",
+                "renovate",
+                "kodiak"
+              ],
+              "ignoreWords": [
+                "IOANNIS",
+                "LOUGIAKIS"
+              ],
+              "ignorePaths": [
+                "node_modules/**",
+                "dist/**",
+                ".astro/**",
+                "*.lock",
+                "*.lockb",
+                "package-lock.json",
+                "bun.lock"
+              ]
+            }
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Check code formatting
-        run: |
-          if [ -f "node_modules/.bin/prettier" ]; then
-            npx prettier --check "src/**/*.{astro,ts,tsx,js,jsx,css,md}"
-          else
-            echo "Prettier not found, skipping format check"
-          fi
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [lint-and-type-check]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb', '**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Build project
+      - name: Build project (Vercel validation)
         run: bun run build
+        env:
+          ASTRO_TELEMETRY_DISABLED: 1
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Build failed: dist folder not created"
+            exit 1
+          fi
+          echo "✅ Build successful - ready for Vercel deployment"
+          echo "📦 Build output size:"
+          du -sh dist/
+
+      - name: Auto-label PR
+        if: github.event_name == 'pull_request'
+        uses: actions/labeler@v5
         with:
-          name: build-files
-          path: dist/
-          retention-days: 7
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+      - name: Add Vercel deployment status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ **CI passed!** All quality checks completed successfully.
+
+            🚀 **Vercel will automatically deploy this PR** when merged to main.
+            📦 Build validated and ready for deployment.
+            
+            **Quality Checks:**
+            - ✅ ESLint
+            - ✅ Code formatting
+            - ✅ TypeScript types
+            - ✅ Spell check
+            - ✅ Build successful`
+            })

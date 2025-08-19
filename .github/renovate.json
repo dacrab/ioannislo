@@ -1,0 +1,88 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor"
+  ],
+  "timezone": "Europe/Athens",
+  "schedule": ["on sunday"],
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "assignees": ["dacrab"],
+  "reviewers": ["dacrab"],
+  "labels": ["dependencies"],
+  "platformAutomerge": false,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "📦 Dependency Updates Dashboard",
+  "separateMinorPatch": false,
+  "separateMajorMinor": true,
+  "separateMultipleMajor": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 3,
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["on the first day of the month"]
+  },
+  "packageRules": [
+    {
+      "description": "Group all non-major updates together",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "groupSlug": "github-actions",
+      "addLabels": ["github_actions"]
+    },
+    {
+      "description": "Group Astro ecosystem updates",
+      "matchPackagePatterns": ["^astro", "^@astrojs/"],
+      "groupName": "Astro ecosystem",
+      "groupSlug": "astro"
+    },
+    {
+      "description": "Group ESLint ecosystem updates",
+      "matchPackagePatterns": ["eslint", "@eslint", "@typescript-eslint"],
+      "groupName": "ESLint ecosystem", 
+      "groupSlug": "eslint"
+    },
+    {
+      "description": "Group TypeScript ecosystem updates",
+      "matchPackagePatterns": ["typescript", "@types/"],
+      "groupName": "TypeScript ecosystem",
+      "groupSlug": "typescript"
+    },
+    {
+      "description": "Auto-merge patch and minor updates for trusted packages",
+      "matchPackagePatterns": [
+        "^prettier",
+        "^eslint",
+        "^typescript",
+        "^@types/",
+        "^astro",
+        "^@astrojs/"
+      ],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "description": "Auto-merge GitHub Actions patch and minor updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": ["dacrab"],
+    "schedule": ["at any time"]
+  }
+}

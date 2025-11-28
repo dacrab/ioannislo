@@ -26,23 +26,23 @@ const expertise = [
   <main class="space-y-24 md:space-y-32">
     <!-- Hero Section -->
     <section id="home" class="pt-4">
-      <h1 class="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight max-w-xl">
+      <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 dark:text-white mb-6 tracking-tight max-w-xl transition-colors duration-300">
         Building the web, one pixel at a time.
       </h1>
-      <p class="text-neutral-400 text-lg leading-relaxed max-w-xl mb-8">
-        I'm Ioannis. I'm a web enthusiast passionate about creating clean and functional websites. Welcome to my personal portfolio.
+      <p class="text-neutral-600 dark:text-neutral-400 text-lg leading-relaxed max-w-xl mb-8 transition-colors duration-300">
+        Welcome to my personal portfolio.
       </p>
       <div class="flex gap-4">
         <a 
           href="/IOANNIS_LOUGIAKIS_CV.pdf" 
           download="IOANNIS_LOUGIAKIS_CV.pdf"
-          class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-black font-medium hover:bg-neutral-200 transition-colors"
+          class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
         >
           Download CV
         </a>
         <a 
           href="#contact" 
-          class="px-6 py-3 rounded-full text-neutral-300 hover:text-white border border-neutral-800 hover:border-neutral-600 transition-all"
+          class="px-6 py-3 rounded-full text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white border border-neutral-300 dark:border-neutral-800 hover:border-neutral-600 dark:hover:border-neutral-600 transition-all"
         >
           Get in Touch
         </a>
@@ -52,7 +52,7 @@ const expertise = [
     <!-- About Section -->
     <section id="about">
       <h2 class="text-xs font-bold text-neutral-500 mb-8 uppercase tracking-widest">About</h2>
-      <div class="space-y-6 text-neutral-400 leading-relaxed max-w-2xl">
+      <div class="space-y-6 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl transition-colors duration-300">
         <p>
           I am starting my journey in web development with a focus on the fundamentals. 
           I enjoy turning designs into working code and learning new technologies along the way.
@@ -60,7 +60,7 @@ const expertise = [
         <p>
           My goal is to build accessible and performant websites while continuously improving my skillset in the ever-evolving tech landscape.
         </p>
-        <blockquote class="pl-4 border-l-2 border-neutral-800 italic text-neutral-500 mt-6">
+        <blockquote class="pl-4 border-l-2 border-neutral-200 dark:border-neutral-800 italic text-neutral-500 dark:text-neutral-500 mt-6 transition-colors duration-300">
           "Every expert was once a beginner."
         </blockquote>
       </div>
@@ -71,8 +71,8 @@ const expertise = [
       <h2 class="text-xs font-bold text-neutral-500 mb-8 uppercase tracking-widest">Skills</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         {expertise.map(item => (
-          <div class="p-4 rounded-lg border border-neutral-800 bg-neutral-900/30 hover:bg-neutral-900/50 transition-colors">
-            <span class="text-neutral-300">{item}</span>
+          <div class="p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/30 hover:bg-neutral-100 dark:hover:bg-neutral-900/50 transition-colors duration-300">
+            <span class="text-neutral-700 dark:text-neutral-300">{item}</span>
           </div>
         ))}
       </div>
@@ -81,7 +81,7 @@ const expertise = [
     <!-- Contact Section -->
     <section id="contact">
       <h2 class="text-xs font-bold text-neutral-500 mb-8 uppercase tracking-widest">Connect</h2>
-      <p class="text-neutral-400 mb-8 max-w-md text-lg">
+      <p class="text-neutral-600 dark:text-neutral-400 mb-8 max-w-md text-lg transition-colors duration-300">
         I'm always open to new opportunities and collaborations.
       </p>
       <div class="flex flex-wrap gap-4">
@@ -90,14 +90,14 @@ const expertise = [
             href={link.url}
             target="_blank"
             rel="noopener noreferrer" 
-            class="px-6 py-3 rounded-full text-neutral-300 hover:text-white border border-neutral-800 hover:border-neutral-600 transition-all"
+            class="px-6 py-3 rounded-full text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white border border-neutral-300 dark:border-neutral-800 hover:border-neutral-600 dark:hover:border-neutral-600 transition-all"
           >
             {link.platform}
           </a>
         ))}
         <a 
           href="mailto:hello@ioannislo.com" 
-          class="px-6 py-3 rounded-full bg-white text-black font-medium hover:bg-neutral-200 transition-colors"
+          class="px-6 py-3 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
         >
           Email Me
         </a>

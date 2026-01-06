@@ -89,4 +89,4 @@ jspm_packages/
 
 # Temporary folders
 tmp/
-temp/bun.lock
+package-lock.json

@@ -8,17 +8,12 @@ on:
 
 jobs:
   build:
-    name: Build & Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        
-      - name: Install Dependencies
-        run: bun install
+      - uses: oven-sh/setup-bun@v2
 
-      - name: Build Project
-        run: bun run build
+      - run: bun install --frozen-lockfile
+
+      - run: bun run build

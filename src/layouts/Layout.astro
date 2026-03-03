@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import "../styles/global.css";
 
 interface Props {
@@ -33,6 +34,7 @@ const { title, description = "Portfolio" } = Astro.props;
     <div class="mx-auto max-w-2xl px-6 py-12 md:py-20 min-h-screen flex flex-col">
       <slot />
     </div>
+    <Analytics />
   </body>
 </html>
 

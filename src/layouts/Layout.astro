@@ -29,12 +29,12 @@ const { title, description = "Portfolio" } = Astro.props;
           document.documentElement.classList.remove('dark');
       }
     </script>
+    <Analytics />
   </head>
   <body class="bg-white text-neutral-900 dark:bg-[#0a0a0a] dark:text-[#ededed] font-sans antialiased selection:bg-neutral-900 selection:text-white dark:selection:bg-[#ededed] dark:selection:text-[#0a0a0a] transition-colors duration-300">
     <div class="mx-auto max-w-2xl px-6 py-12 md:py-20 min-h-screen flex flex-col">
       <slot />
     </div>
-    <Analytics />
   </body>
 </html>
 

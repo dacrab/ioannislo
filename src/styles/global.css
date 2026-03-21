@@ -1,3 +1,38 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* Page load animations */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+header {
+  animation: fade-in 0.4s ease both;
+}
+
+#home {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+#about {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+#skills {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+#contact {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}

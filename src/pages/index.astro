@@ -158,16 +158,19 @@ const skills = [
   const darkIcon = document.getElementById('theme-toggle-dark-icon');
   const lightIcon = document.getElementById('theme-toggle-light-icon');
 
-  const isDark = () => document.documentElement.classList.contains('dark');
+  const updateIcons = () => {
+    const dark = document.documentElement.classList.contains('dark');
+    darkIcon.classList.toggle('hidden', dark);
+    lightIcon.classList.toggle('hidden', !dark);
+  };
 
-  (isDark() ? lightIcon : darkIcon).classList.remove('hidden');
+  updateIcons();
 
   btn.addEventListener('click', () => {
-    darkIcon.classList.toggle('hidden');
-    lightIcon.classList.toggle('hidden');
-    const dark = isDark();
+    const dark = document.documentElement.classList.contains('dark');
     document.documentElement.classList.toggle('dark', !dark);
     localStorage.setItem('color-theme', dark ? 'light' : 'dark');
+    updateIcons();
   });
 </script>
 

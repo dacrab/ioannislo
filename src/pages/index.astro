@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 const socialLinks = [
   { platform: 'Facebook', url: 'https://www.facebook.com/ioannis.lougiakis' },
@@ -150,6 +152,8 @@ const skills = [
   </footer>
 
 </div>
+<Analytics />
+<SpeedInsights />
 </body>
 </html>
 

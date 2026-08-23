@@ -7,17 +7,18 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^7.0.0",
+    "astro": "^7.2.4",
     "tailwindcss": "^4.3.1"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/language-server": "^2.16.14",
     "typescript": "^6.0.3"
   }
 }

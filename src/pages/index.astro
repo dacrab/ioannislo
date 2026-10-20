@@ -14,26 +14,48 @@ const skills = [
   'UI/UX Fundamentals',
   'Accessibility',
 ];
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ioannislo.vercel.app');
+const description = 'Ioannis Lougiakis — frontend developer focused on clean, performant web experiences.';
 ---
 
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="Ioannis Lougiakis — frontend developer focused on clean, performant web experiences." />
-  <meta name="viewport" content="width=device-width" />
+  <meta name="description" content={description} />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href={canonicalURL} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="generator" content={Astro.generator} />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+  <meta property="og:title" content="Ioannis Lo — Frontend Developer" />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Ioannis Lo — Frontend Developer" />
+  <meta name="twitter:description" content={description} />
   <title>Ioannis Lo — Frontend Developer</title>
   <script is:inline>
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    let storedTheme = null;
+    try {
+      storedTheme = localStorage.getItem('color-theme');
+    } catch {
+      storedTheme = null;
     }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', storedTheme === 'dark' || (storedTheme === null && prefersDark));
   </script>
 </head>
 <body class="bg-white text-neutral-900 dark:bg-[#0a0a0a] dark:text-[#ededed] font-sans antialiased selection:bg-neutral-900 selection:text-white dark:selection:bg-[#ededed] dark:selection:text-[#0a0a0a] transition-colors duration-300">
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-[60] focus:rounded-md focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white dark:focus:bg-white dark:focus:text-black"
+>
+  Skip to content
+</a>
 <div class="mx-auto max-w-xl px-6 py-10 md:py-16 min-h-screen flex flex-col">
 
   <header class="mb-20 md:mb-28 flex items-center justify-between sticky top-0 z-50 py-5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-sm -mx-6 px-6 border-b border-neutral-100 dark:border-white/[0.06] transition-colors duration-300">
@@ -51,20 +73,20 @@ const skills = [
       <button
         id="theme-toggle"
         type="button"
-        aria-label="Toggle theme"
+        aria-label="Switch to dark theme"
         class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition-colors cursor-pointer"
       >
-        <svg id="theme-toggle-dark-icon" class="hidden w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <svg id="theme-toggle-dark-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
         </svg>
-        <svg id="theme-toggle-light-icon" class="hidden w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <svg id="theme-toggle-light-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z"></path>
         </svg>
       </button>
     </div>
   </header>
 
-  <main class="flex flex-col gap-24 md:gap-32">
+  <main id="main-content" tabindex="-1" class="flex flex-col gap-24 md:gap-32">
 
     <section id="home">
       <p class="text-sm text-neutral-400 dark:text-neutral-500 mb-5">Ioannis Lougiakis</p>
@@ -134,6 +156,7 @@ const skills = [
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`${link.platform} (opens in new tab)`}
               class="hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
               {link.platform}
@@ -156,27 +179,27 @@ const skills = [
   inject();
   injectSpeedInsights();
 </script>
-</body>
-</html>
-
 <script is:inline>
-  const btn = document.getElementById('theme-toggle');
-  const darkIcon = document.getElementById('theme-toggle-dark-icon');
-  const lightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggle = document.getElementById('theme-toggle');
+  const root = document.documentElement;
 
-  const updateIcons = () => {
-    const dark = document.documentElement.classList.contains('dark');
-    darkIcon.classList.toggle('hidden', dark);
-    lightIcon.classList.toggle('hidden', !dark);
+  const updateThemeToggle = () => {
+    const isDark = root.classList.contains('dark');
+    themeToggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
   };
 
-  updateIcons();
+  updateThemeToggle();
 
-  btn.addEventListener('click', () => {
-    const dark = document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', !dark);
-    localStorage.setItem('color-theme', dark ? 'light' : 'dark');
-    updateIcons();
+  themeToggle.addEventListener('click', () => {
+    const isDark = root.classList.toggle('dark');
+    try {
+      localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+    } catch {
+      // Storage can be unavailable (private mode, blocked cookies); theme still applies for this visit.
+    }
+    updateThemeToggle();
   });
 </script>
+</body>
+</html>
 

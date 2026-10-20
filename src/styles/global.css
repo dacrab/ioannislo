@@ -20,3 +20,23 @@ header { animation-duration: 0.4s; }
 #about { animation-delay: 0.2s; }
 #skills { animation-delay: 0.3s; }
 #contact { animation-delay: 0.4s; }
+
+#theme-toggle-dark-icon,
+#theme-toggle-light-icon {
+  display: none;
+}
+
+html:not(.dark) #theme-toggle-dark-icon,
+html.dark #theme-toggle-light-icon {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  html.scroll-smooth { scroll-behavior: auto; }
+
+  header,
+  section[id] {
+    animation: none;
+  }
+}

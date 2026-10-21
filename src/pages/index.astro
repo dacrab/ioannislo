@@ -179,26 +179,28 @@ const description = 'Ioannis Lougiakis — frontend developer focused on clean, 
   inject();
   injectSpeedInsights();
 </script>
-<script is:inline>
-  const themeToggle = document.getElementById('theme-toggle');
+<script>
+  const themeToggle = document.querySelector<HTMLButtonElement>('#theme-toggle');
   const root = document.documentElement;
 
-  const updateThemeToggle = () => {
-    const isDark = root.classList.contains('dark');
-    themeToggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
-  };
+  if (themeToggle) {
+    const updateThemeToggle = () => {
+      const isDark = root.classList.contains('dark');
+      themeToggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    };
 
-  updateThemeToggle();
-
-  themeToggle.addEventListener('click', () => {
-    const isDark = root.classList.toggle('dark');
-    try {
-      localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
-    } catch {
-      // Storage can be unavailable (private mode, blocked cookies); theme still applies for this visit.
-    }
     updateThemeToggle();
-  });
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = root.classList.toggle('dark');
+      try {
+        localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+      } catch {
+        // Storage can be unavailable (private mode, blocked cookies); theme still applies for this visit.
+      }
+      updateThemeToggle();
+    });
+  }
 </script>
 </body>
 </html>

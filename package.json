@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check --tsconfig ./tsconfig.json"
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

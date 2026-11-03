@@ -1,19 +1,25 @@
-# Ioannis Lo — Portfolio
+# Ioannis Lo
 
-Minimalist personal portfolio for Ioannis Lo, Web Enthusiast & Creative Professional. Built with Astro and Tailwind CSS.
+A one-page portfolio for Ioannis Lo, a frontend developer.
 
-## Quick Start
+**Live demo:** https://ioannislo.vercel.app
+
+Short and to the point: an introduction, a little about him, the skills he's building on, and a few ways to get in touch. His CV is a click away at the top, and the page follows your system's light or dark preference.
+
+## Running it
 
 ```bash
 bun install
-bun run dev      # http://localhost:4321
-bun run build
+bun run dev
 ```
 
-## Stack
+To build the static site, run `bun run build`.
 
-- [Astro](https://astro.build) — static site generator
-- [Tailwind CSS](https://tailwindcss.com) — utility-first CSS
+## Making changes
+
+Most of the copy sits in `src/pages/index.astro`, with colours and typography in `src/styles/global.css`. The CV is `public/IOANNIS_LOUGIAKIS_CV.pdf`.
+
+Built with Astro and Tailwind CSS, and deployed on Vercel.
 
 ## License
 

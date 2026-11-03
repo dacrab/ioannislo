@@ -1,31 +1,13 @@
 ---
-import "../styles/global.css";
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ioannislo.vercel.app');
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="canonical" href={canonicalURL} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="generator" content={Astro.generator} />
-  <title>404 — Ioannis Lo</title>
-  <script is:inline>
-    let storedTheme = null;
-    try {
-      storedTheme = localStorage.getItem('color-theme');
-    } catch {
-      storedTheme = null;
-    }
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.classList.toggle('dark', storedTheme === 'dark' || (storedTheme === null && prefersDark));
-  </script>
-</head>
-<body class="bg-white text-neutral-900 dark:bg-[#0a0a0a] dark:text-[#ededed] font-sans antialiased transition-colors duration-300">
-<main class="mx-auto max-w-xl px-6 py-10 md:py-16 min-h-screen flex flex-col justify-center">
+<Layout
+  title="404 — Ioannis Lo"
+  description="Page not found — Ioannis Lougiakis, frontend developer."
+  noindex
+>
+<main id="main-content" tabindex="-1" class="mx-auto max-w-xl px-6 py-10 md:py-16 min-h-screen flex flex-col justify-center">
   <p class="text-sm text-neutral-400 dark:text-neutral-500 mb-5">404</p>
   <h1 class="text-4xl md:text-[2.75rem] font-bold text-neutral-900 dark:text-white mb-5 tracking-tight leading-[1.15]">
     Page not found.
@@ -34,5 +16,4 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ioannisl
     Back home →
   </a>
 </main>
-</body>
-</html>
+</Layout>

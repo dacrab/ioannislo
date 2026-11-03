@@ -1,0 +1,58 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://ioannislo.vercel.app');
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content={description} />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {noindex && <meta name="robots" content="noindex, follow" />}
+  <link rel="canonical" href={canonicalURL} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+  {!noindex && (
+    <>
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={canonicalURL} />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+    </>
+  )}
+  <title>{title}</title>
+  <script is:inline>
+    let storedTheme = null;
+    try {
+      storedTheme = localStorage.getItem('color-theme');
+    } catch {
+      storedTheme = null;
+    }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', storedTheme === 'dark' || (storedTheme === null && prefersDark));
+  </script>
+</head>
+<body class="bg-white text-neutral-900 dark:bg-[#0a0a0a] dark:text-[#ededed] font-sans antialiased selection:bg-neutral-900 selection:text-white dark:selection:bg-[#ededed] dark:selection:text-[#0a0a0a] transition-colors duration-300">
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-[60] focus:rounded-md focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white dark:focus:bg-white dark:focus:text-black"
+>
+  Skip to content
+</a>
+<slot />
+</body>
+</html>
